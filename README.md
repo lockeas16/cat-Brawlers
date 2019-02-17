@@ -4,10 +4,10 @@
 ## Introduction
 Initial setup
 
-##Documentation
+## Documentation
 Initial setup
 
-##Setup
+## Setup
 If you'd like to view my project locally:
 1. Clone this repo ```git clone https://github.com/lockeas16/Ironhack-project-1.git```
 2. Enter main folder ```cd Ironhack-project-1```
