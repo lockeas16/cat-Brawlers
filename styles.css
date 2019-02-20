@@ -1,0 +1,33 @@
+@import url("https://fonts.googleapis.com/css?family=Rock+Salt");
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.game-present {
+  width: 100%;
+  height: 100vh;
+  background-image: url("./images/game_logo.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.options {
+  display: flex;
+  flex-direction: row;
+}
+
+div.game-present > h1 {
+  padding-top: 10vh;
+  padding-left: 10vw;
+  margin-bottom: 15vw;
+  font-family: "Rock Salt", cursive;
+  color: white;
+  font-size: 3em;
+}
+
+div.game-present section > a {
+  text-decoration: none;
+}
