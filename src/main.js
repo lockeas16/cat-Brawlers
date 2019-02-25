@@ -6,63 +6,57 @@ let frames = 0;
 
 // retrieve chosen cat from local storage
 let catChosen = window.localStorage.getItem("catChosen");
-// remove key from local storage
-// window.localStorage.removeItem("catChosen");
 let cat;
 
-if (catChosen === "cat-1"){
-  cat = new Cat(globalConst.idleSpriteWidth /  globalConst.cols, globalConst.idleSpriteHeight, "./images/cat-1-idle-sprite.png");
+if (catChosen === "cat-1") {
+  cat = new Cat(
+    globalConst.idleSpriteWidth / globalConst.cols,
+    globalConst.idleSpriteHeight,
+    "./images/cat-1-idle-sprite.png"
+  );
 }
-if (catChosen === "cat-2"){
-  cat = new Cat(globalConst.idleSpriteWidth /  globalConst.cols, globalConst.idleSpriteHeight, "./images/cat-2-idle-sprite.png");
+if (catChosen === "cat-2") {
+  cat = new Cat(
+    globalConst.idleSpriteWidth / globalConst.cols,
+    globalConst.idleSpriteHeight,
+    "./images/cat-2-idle-sprite.png"
+  );
 }
 
 let fondo = new Background(canvas.width, canvas.height, "./images/floor-1.jpg");
+let keylogger = new keyLogger();
 
 window.onload = function() {
   let interval = setInterval(() => {
     frames++;
     // frameCount = frames % 60;
-    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     fondo.draw(ctx);
     chooseFrame(cat);
     cat.drawIdle(ctx);
-  }, 1000/60);
+  }, 1000 / 60);
 
   // add event listener to keys
-  document.addEventListener("keydown",event => {
-    switch (event.keyCode) {
-      // ArrowUp
-      case 38:
-        cat.moveUp(globalConst.movement,0)
-        break;
-      // Arrow Down
-      case 40:
-        cat.moveDown(globalConst.movement,canvas.height);
-        break;
-      // Arrow Right
-      case 39:
-        cat.moveRight(globalConst.movement,canvas.width);
-        break;
-      // Arrow Left
-      case 37:
-        cat.moveLeft(globalConst.movement,0);
-        break;
-    
-      default:
-        break;
-    }
-  })
+  document.addEventListener("keydown", event => {
+    cat.direction = keylogger.keyPress(event.keyCode);
+    cat.move(globalConst.movement, 0, canvas.width, canvas.height, 0);
+  });
+
+  document.addEventListener("keyup", event => {
+    cat.direction = keylogger.keyRelease(event.keyCode);
+    cat.move(globalConst.movement, 0, canvas.width, canvas.height, 0);
+  });
 };
 
-function chooseFrame(cat){
-  if (frames % 33 === 0){
+function chooseFrame(cat) {
+  // update all frames within a second
+  if (frames % 60 <= 20) {
     cat.updateFrame(0);
   }
-  if (frames % 66 === 0){
+  if (frames % 60 > 20 && frames % 60 <= 40) {
     cat.updateFrame(1);
   }
-  if (frames % 100 === 0){
+  if (frames % 60 > 40) {
     cat.updateFrame(2);
   }
 }

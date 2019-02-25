@@ -27,6 +27,7 @@ class Cat extends Item {
     this.srcy = 0;
     this.image = new Image();
     this.image.src = src;
+    this.direction = "S";
   }
 
   drawIdle(ctx) {
@@ -58,6 +59,48 @@ class Cat extends Item {
   moveLeft(mov, boundarie) {
     if (this.x - mov > boundarie) this.x -= mov;
   }
+  move(mov, boundTop, boundRight, boundBottom, boundLeft) {
+    switch (this.direction) {
+      case "N":
+        this.moveUp(mov, boundTop);
+        break;
+
+      case "E":
+        this.moveRight(mov, boundRight);
+        break;
+
+      case "S":
+        this.moveDown(mov, boundBottom);
+        break;
+
+      case "W":
+        this.moveLeft(mov, boundLeft);
+        break;
+
+      case "NW":
+        this.moveUp(mov, boundTop);
+        this.moveLeft(mov, boundLeft);
+        break;
+
+      case "NE":
+        this.moveUp(mov, boundTop);
+        this.moveRight(mov, boundRight);
+        break;
+
+      case "SW":
+        this.moveDown(mov, boundBottom);
+        this.moveLeft(mov, boundLeft);
+        break;
+
+      case "SE":
+        this.moveDown(mov, boundBottom);
+        this.moveRight(mov, boundRight);
+        break;
+
+      default:
+        break;
+    }
+  }
 }
 
 class Background extends Item {
@@ -68,5 +111,46 @@ class Background extends Item {
   }
   draw(ctx) {
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+  }
+}
+
+class keyLogger {
+  constructor() {
+    this.keys = [];
+    this.validKeys = {
+      // left
+      37: true,
+      // up
+      38: true,
+      // right
+      39: true,
+      // down
+      40: true
+    };
+  }
+  // register the key pressed and then returns the direction
+  keyPress(key) {
+    if (this.validKeys[key]) this.keys[key] = true;
+    return this.calculateDirection();
+  }
+  // unregister the key released and then returns the direction
+  keyRelease(key) {
+    if (this.validKeys[key]) this.keys[key] = false;
+    return this.calculateDirection();
+  }
+
+  calculateDirection(){
+    if (this.keys[37] && !this.keys[38] && !this.keys[39] && !this.keys[40])
+      return "W";
+    if (!this.keys[37] && this.keys[38] && !this.keys[39] && !this.keys[40])
+      return "N";
+    if (!this.keys[37] && !this.keys[38] && this.keys[39] && !this.keys[40])
+      return "E";
+    if (!this.keys[37] && !this.keys[38] && !this.keys[39] && this.keys[40])
+      return "S";
+    if (this.keys[38] && this.keys[37]) return "NW";
+    if (this.keys[38] && this.keys[39]) return "NE";
+    if (this.keys[40] && this.keys[37]) return "SW";
+    if (this.keys[40] && this.keys[39]) return "SE";
   }
 }
