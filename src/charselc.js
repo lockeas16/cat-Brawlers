@@ -19,11 +19,11 @@ window.onload = function() {
     // draw first cat
     ctxChar1.clearRect(0, 0, canvasChar1.width, canvasChar1.height);
     cat1.updateFrame(curFrame);
-    cat1.drawIdle(ctxChar1,curFrame);
+    cat1.draw(ctxChar1,curFrame);
     // draw second cat
     ctxChar2.clearRect(0, 0, canvasChar1.width, canvasChar1.height);
     cat2.updateFrame(curFrame);
-    cat2.drawIdle(ctxChar2);
+    cat2.draw(ctxChar2);
   }, 1000/frameCount);
 
   // add event listener to anchor

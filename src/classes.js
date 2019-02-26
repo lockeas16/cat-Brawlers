@@ -5,8 +5,8 @@ const globalConst = {
   leftSpriteHeight: 23,
   rightSpriteWidth: 84,
   rightSpriteHeight: 23,
-  downSpriteWidth: 42,
-  downSpriteHeight: 23,
+  upSpriteWidth: 42,
+  upSpriteHeight: 24,
   cols: 3,
   movement: 3
 };
@@ -27,10 +27,10 @@ class Cat extends Item {
     this.srcy = 0;
     this.image = new Image();
     this.image.src = src;
-    this.direction = "S";
+    this.direction = undefined;
   }
 
-  drawIdle(ctx) {
+  draw(ctx) {
     // this.srcx = curFrame * this.width;
     ctx.drawImage(
       this.image,

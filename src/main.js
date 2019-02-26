@@ -2,26 +2,14 @@
 let canvas = document.getElementById("world");
 let ctx = canvas.getContext("2d");
 let frames = 0;
-// let frameCount = globalConst.cols;
 
 // retrieve chosen cat from local storage
 let catChosen = window.localStorage.getItem("catChosen");
-let cat;
-
-if (catChosen === "cat-1") {
-  cat = new Cat(
-    globalConst.idleSpriteWidth / globalConst.cols,
-    globalConst.idleSpriteHeight,
-    "./images/cat-1-idle-sprite.png"
-  );
-}
-if (catChosen === "cat-2") {
-  cat = new Cat(
-    globalConst.idleSpriteWidth / globalConst.cols,
-    globalConst.idleSpriteHeight,
-    "./images/cat-2-idle-sprite.png"
-  );
-}
+let cat = new Cat(
+  globalConst.idleSpriteWidth / globalConst.cols,
+  globalConst.idleSpriteHeight,
+  `./images/${catChosen}-idle-sprite.png`
+);
 
 let fondo = new Background(canvas.width, canvas.height, "./images/floor-1.jpg");
 let keylogger = new keyLogger();
@@ -29,26 +17,56 @@ let keylogger = new keyLogger();
 window.onload = function() {
   let interval = setInterval(() => {
     frames++;
-    // frameCount = frames % 60;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     fondo.draw(ctx);
     chooseFrame(cat);
-    cat.drawIdle(ctx);
+    cat.draw(ctx);
+    if (cat.direction)
+      cat.move(globalConst.movement, 0, canvas.width, canvas.height, 0);
   }, 1000 / 60);
 
   // add event listener to keys
   document.addEventListener("keydown", event => {
     cat.direction = keylogger.keyPress(event.keyCode);
-    cat.move(globalConst.movement, 0, canvas.width, canvas.height, 0);
   });
 
   document.addEventListener("keyup", event => {
     cat.direction = keylogger.keyRelease(event.keyCode);
-    cat.move(globalConst.movement, 0, canvas.width, canvas.height, 0);
   });
 };
 
 function chooseFrame(cat) {
+  // update sprite to draw, adjusting width and height accordingly
+  switch (cat.direction) {
+    case "E":
+    case "NE":
+    case "SE":
+      cat.image.src = `./images/${catChosen}-right-sprite.png`;
+      cat.width = globalConst.leftSpriteWidth / globalConst.cols;
+      cat.height = globalConst.leftSpriteHeight;
+      break;
+    case "W":
+    case "NW":
+    case "SW":
+      cat.image.src = `./images/${catChosen}-left-sprite.png`;
+      cat.width = globalConst.rightSpriteWidth / globalConst.cols;
+      cat.height = globalConst.rightSpriteHeight;
+      break;
+    case "N":
+      cat.image.src = `./images/${catChosen}-up-sprite.png`;
+      cat.width = globalConst.upSpriteWidth / globalConst.cols;
+      cat.height = globalConst.upSpriteHeight;
+      break;
+    case "S":
+      cat.image.src = `./images/${catChosen}-idle-sprite.png`;
+      cat.width = globalConst.idleSpriteWidth / globalConst.cols;
+      cat.height = globalConst.idleSpriteHeight;
+      break;
+
+    default:
+      break;
+  }
+
   // update all frames within a second
   if (frames % 60 <= 20) {
     cat.updateFrame(0);
