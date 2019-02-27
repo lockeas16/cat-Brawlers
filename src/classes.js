@@ -7,8 +7,11 @@ const globalConst = {
   rightSpriteHeight: 23,
   upSpriteWidth: 42,
   upSpriteHeight: 24,
+  demonSpriteWidth: 132,
+  demonSpriteHeight: 46,
   cols: 3,
-  movement: 3
+  movement: 3,
+  enemySpeed: 1
 };
 
 class Item {
@@ -31,7 +34,6 @@ class Cat extends Item {
   }
 
   draw(ctx) {
-    // this.srcx = curFrame * this.width;
     ctx.drawImage(
       this.image,
       this.srcx,
@@ -103,6 +105,48 @@ class Cat extends Item {
   }
 }
 
+class Enemy extends Item {
+  constructor(width, height, src) {
+    super(0, 0, width, height);
+    this.srcx = 0;
+    this.srcy = 0;
+    this.image = new Image();
+    this.image.src = src;
+  }
+  draw(ctx) {
+    ctx.drawImage(
+      this.image,
+      this.srcx,
+      this.srcy,
+      this.width,
+      this.height,
+      this.x,
+      this.y,
+      this.width,
+      this.height
+    );
+  }
+  moveDown(mov, boundarie) {
+    if (this.y + mov + this.height < boundarie) this.y += mov;
+  }
+  moveUp(mov, boundarie) {
+    if (this.y - mov > boundarie) this.y -= mov;
+  }
+  moveRight(mov, boundarie) {
+    if (this.x + mov + this.width < boundarie) this.x += mov;
+  }
+  moveLeft(mov, boundarie) {
+    if (this.x - mov > boundarie) this.x -= mov;
+  }
+  move(mov, boundTop, boundRight, boundBottom, boundLeft, target) {
+    let {x,y} = target;
+    if (this.x < x) this.moveRight(mov,boundRight);
+    if (this.x > x) this.moveLeft(mov, boundLeft);
+    if (this.y < y) this.moveDown(mov, boundBottom);
+    if (this.y > y) this.moveUp(mov, boundTop);
+  }
+}
+
 class Background extends Item {
   constructor(width, height, src) {
     super(0, 0, width, height);
@@ -139,7 +183,7 @@ class keyLogger {
     return this.calculateDirection();
   }
 
-  calculateDirection(){
+  calculateDirection() {
     if (this.keys[37] && !this.keys[38] && !this.keys[39] && !this.keys[40])
       return "W";
     if (!this.keys[37] && this.keys[38] && !this.keys[39] && !this.keys[40])

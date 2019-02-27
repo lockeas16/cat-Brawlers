@@ -2,6 +2,8 @@
 let canvas = document.getElementById("world");
 let ctx = canvas.getContext("2d");
 let frames = 0;
+let interval = 0;
+let enemies = [];
 
 // retrieve chosen cat from local storage
 let catChosen = window.localStorage.getItem("catChosen");
@@ -10,12 +12,16 @@ let cat = new Cat(
   globalConst.idleSpriteHeight,
   `./images/${catChosen}-idle-sprite.png`
 );
+// center cat in canvas
+// divide by 2 total width and total height of cat (it is multiplied by 3 the original sprite)
+cat.x = canvas.width / 2 - (cat.width * 3) / 2;
+cat.y = canvas.height / 2 - (cat.height * 3) / 2;
 
 let fondo = new Background(canvas.width, canvas.height, "./images/floor-1.jpg");
 let keylogger = new keyLogger();
 
 window.onload = function() {
-  let interval = setInterval(() => {
+  interval = setInterval(() => {
     frames++;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     fondo.draw(ctx);
@@ -23,6 +29,8 @@ window.onload = function() {
     cat.draw(ctx);
     if (cat.direction)
       cat.move(globalConst.movement, 0, canvas.width, canvas.height, 0);
+    generateEnemies();
+    drawEnemies();
   }, 1000 / 60);
 
   // add event listener to keys
@@ -77,4 +85,22 @@ function chooseFrame(cat) {
   if (frames % 60 > 40) {
     cat.updateFrame(2);
   }
+}
+
+function generateEnemies() {
+  if (!(frames % 60 === 0)) return;
+  let enemy = new Enemy(
+    globalConst.demonSpriteWidth / globalConst.cols,
+    globalConst.demonSpriteHeight,
+    `./images/demon-red-sprite.png`,
+    cat
+  );
+  enemies.push(enemy);
+}
+
+function drawEnemies(){
+  enemies.forEach((enemy, index) => {
+    enemy.draw(ctx);
+    enemy.move(globalConst.enemySpeed, 0, canvas.width, canvas.height, 0, cat);
+  });
 }
