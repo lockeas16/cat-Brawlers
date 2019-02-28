@@ -11,7 +11,8 @@ const globalConst = {
   demonSpriteHeight: 46,
   cols: 3,
   movement: 3,
-  enemySpeed: 1
+  enemySpeed: 1,
+  bulletSpeed: 4
 };
 
 class Item {
@@ -31,6 +32,7 @@ class Cat extends Item {
     this.image = new Image();
     this.image.src = src;
     this.direction = undefined;
+    this.orientation = "S";
   }
 
   draw(ctx) {
@@ -46,8 +48,16 @@ class Cat extends Item {
       this.height * 3
     );
   }
-  updateFrame(frame) {
-    this.srcx = frame * this.width;
+  updateFrame(frames) {
+    if (frames % 60 <= 20) {
+      this.srcx = 0 * this.width;
+    }
+    if (frames % 60 > 20 && frames % 60 <= 40) {
+      this.srcx = 1 * this.width;
+    }
+    if (frames % 60 > 40) {
+      this.srcx = 2 * this.width;
+    }
   }
   moveDown(mov, boundarie) {
     if (this.y + mov + this.height * 3 < boundarie) this.y += mov;
@@ -126,6 +136,17 @@ class Enemy extends Item {
       this.height
     );
   }
+  updateFrame(frames) {
+    if (frames % 60 <= 20) {
+      this.srcx = 0 * this.width;
+    }
+    if (frames % 60 > 20 && frames % 60 <= 40) {
+      this.srcx = 1 * this.width;
+    }
+    if (frames % 60 > 40) {
+      this.srcx = 2 * this.width;
+    }
+  }
   moveDown(mov, boundarie) {
     if (this.y + mov + this.height < boundarie) this.y += mov;
   }
@@ -139,11 +160,84 @@ class Enemy extends Item {
     if (this.x - mov > boundarie) this.x -= mov;
   }
   move(mov, boundTop, boundRight, boundBottom, boundLeft, target) {
-    let {x,y} = target;
-    if (this.x < x) this.moveRight(mov,boundRight);
+    let { x, y } = target;
+    if (this.x < x) this.moveRight(mov, boundRight);
     if (this.x > x) this.moveLeft(mov, boundLeft);
     if (this.y < y) this.moveDown(mov, boundBottom);
     if (this.y > y) this.moveUp(mov, boundTop);
+  }
+}
+
+class HairBall extends Item {
+  constructor(width, height, src, direction) {
+    super(0, 0, width, height);
+    this.srcx = 0;
+    this.srcy = 0;
+    this.image = new Image();
+    this.image.src = src;
+    this.direction = direction;
+  }
+  draw(ctx) {
+    ctx.drawImage(
+      this.image,
+      this.srcx,
+      this.srcy,
+      this.width,
+      this.height,
+      this.x,
+      this.y,
+      this.width / 2,
+      this.height / 2
+    );
+  }
+  alignCenter(cat) {
+    let { x, y, width, height, orientation } = cat;
+    switch (orientation) {
+      case "N":
+        this.x = x + width / 2;
+        this.y = y - this.height;
+        break;
+      case "S":
+        this.x = x + width / 2;
+        this.y = y + height * 3;
+        break;
+      case "E":
+      case "NE":
+      case "SE":
+        this.x = x + width * 3;
+        this.y = y + height;
+        break;
+      case "W":
+      case "NW":
+      case "SW":
+        this.x = x - this.width;
+        this.y = y + height;
+        break;
+      default:
+        break;
+    }
+  }
+  move(speed) {
+    switch (this.direction) {
+      case "N":
+        this.y -= speed;
+        break;
+      case "S":
+        this.y += speed;
+        break;
+      case "E":
+      case "NE":
+      case "SE":
+        this.x += speed;
+        break;
+      case "W":
+      case "NW":
+      case "SW":
+        this.x -= speed;
+        break;
+      default:
+        break;
+    }
   }
 }
 

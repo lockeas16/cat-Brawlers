@@ -4,6 +4,7 @@ let ctx = canvas.getContext("2d");
 let frames = 0;
 let interval = 0;
 let enemies = [];
+let hairballs = [];
 
 // retrieve chosen cat from local storage
 let catChosen = window.localStorage.getItem("catChosen");
@@ -13,7 +14,7 @@ let cat = new Cat(
   `./images/${catChosen}-idle-sprite.png`
 );
 // center cat in canvas
-// divide by 2 total width and total height of cat (it is multiplied by 3 the original sprite)
+// divide by 2 total width and total height of cat (the original sprite is multiplied by 3)
 cat.x = canvas.width / 2 - (cat.width * 3) / 2;
 cat.y = canvas.height / 2 - (cat.height * 3) / 2;
 
@@ -30,17 +31,28 @@ window.onload = function() {
     if (cat.direction)
       cat.move(globalConst.movement, 0, canvas.width, canvas.height, 0);
     generateEnemies();
+    drawHairballs();
     drawEnemies();
   }, 1000 / 60);
 
   // add event listener to keys
   document.addEventListener("keydown", event => {
+    console.log(event.keyCode)
     cat.direction = keylogger.keyPress(event.keyCode);
+    if (cat.direction) cat.orientation = cat.direction;
+    // space bar doesn't work when arrow up and arrow left are bien pressed?
+    if (event.keyCode === 17){
+      let hairball = new HairBall(32,32,"./images/Hairball.png", cat.orientation);
+      hairball.alignCenter(cat);
+      hairballs.push(hairball);
+    }
   });
-
+  
   document.addEventListener("keyup", event => {
     cat.direction = keylogger.keyRelease(event.keyCode);
+    if (cat.direction) cat.orientation = cat.direction;
   });
+
 };
 
 function chooseFrame(cat) {
@@ -75,16 +87,7 @@ function chooseFrame(cat) {
       break;
   }
 
-  // update all frames within a second
-  if (frames % 60 <= 20) {
-    cat.updateFrame(0);
-  }
-  if (frames % 60 > 20 && frames % 60 <= 40) {
-    cat.updateFrame(1);
-  }
-  if (frames % 60 > 40) {
-    cat.updateFrame(2);
-  }
+  cat.updateFrame(frames);
 }
 
 function generateEnemies() {
@@ -92,7 +95,7 @@ function generateEnemies() {
   let enemy = new Enemy(
     globalConst.demonSpriteWidth / globalConst.cols,
     globalConst.demonSpriteHeight,
-    `./images/demon-red-sprite.png`,
+    `./images/demon-white-sprite.png`,
     cat
   );
   enemies.push(enemy);
@@ -100,7 +103,15 @@ function generateEnemies() {
 
 function drawEnemies(){
   enemies.forEach((enemy, index) => {
+    enemy.updateFrame(frames);
     enemy.draw(ctx);
     enemy.move(globalConst.enemySpeed, 0, canvas.width, canvas.height, 0, cat);
+  });
+}
+
+function drawHairballs(){
+  hairballs.forEach((hairball, index) => {
+    hairball.draw(ctx);
+    hairball.move(globalConst.bulletSpeed);
   });
 }
