@@ -26,7 +26,7 @@ window.onload = function() {
     frames++;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     fondo.draw(ctx);
-    chooseFrame(cat);
+    cat.updateFrame(frames, catChosen);
     cat.draw(ctx);
     if (cat.direction)
       cat.move(globalConst.movement, 0, canvas.width, canvas.height, 0);
@@ -37,58 +37,26 @@ window.onload = function() {
 
   // add event listener to keys
   document.addEventListener("keydown", event => {
-    console.log(event.keyCode)
     cat.direction = keylogger.keyPress(event.keyCode);
     if (cat.direction) cat.orientation = cat.direction;
-    // space bar doesn't work when arrow up and arrow left are bien pressed?
-    if (event.keyCode === 17){
-      let hairball = new HairBall(32,32,"./images/Hairball.png", cat.orientation);
+    // space bar doesn't work when arrow up and arrow left are being pressed? odd...
+    if (event.keyCode === 17) {
+      let hairball = new HairBall(
+        globalConst.hairballWidth,
+        globalConst.hairballHeight,
+        "./images/Hairball2.png",
+        cat.orientation
+      );
       hairball.alignCenter(cat);
       hairballs.push(hairball);
     }
   });
-  
+
   document.addEventListener("keyup", event => {
     cat.direction = keylogger.keyRelease(event.keyCode);
     if (cat.direction) cat.orientation = cat.direction;
   });
-
 };
-
-function chooseFrame(cat) {
-  // update sprite to draw, adjusting width and height accordingly
-  switch (cat.direction) {
-    case "E":
-    case "NE":
-    case "SE":
-      cat.image.src = `./images/${catChosen}-right-sprite.png`;
-      cat.width = globalConst.leftSpriteWidth / globalConst.cols;
-      cat.height = globalConst.leftSpriteHeight;
-      break;
-    case "W":
-    case "NW":
-    case "SW":
-      cat.image.src = `./images/${catChosen}-left-sprite.png`;
-      cat.width = globalConst.rightSpriteWidth / globalConst.cols;
-      cat.height = globalConst.rightSpriteHeight;
-      break;
-    case "N":
-      cat.image.src = `./images/${catChosen}-up-sprite.png`;
-      cat.width = globalConst.upSpriteWidth / globalConst.cols;
-      cat.height = globalConst.upSpriteHeight;
-      break;
-    case "S":
-      cat.image.src = `./images/${catChosen}-idle-sprite.png`;
-      cat.width = globalConst.idleSpriteWidth / globalConst.cols;
-      cat.height = globalConst.idleSpriteHeight;
-      break;
-
-    default:
-      break;
-  }
-
-  cat.updateFrame(frames);
-}
 
 function generateEnemies() {
   if (!(frames % 60 === 0)) return;
@@ -101,7 +69,7 @@ function generateEnemies() {
   enemies.push(enemy);
 }
 
-function drawEnemies(){
+function drawEnemies() {
   enemies.forEach((enemy, index) => {
     enemy.updateFrame(frames);
     enemy.draw(ctx);
@@ -109,8 +77,16 @@ function drawEnemies(){
   });
 }
 
-function drawHairballs(){
+function drawHairballs() {
   hairballs.forEach((hairball, index) => {
+    if (
+      hairball.x > canvas.width ||
+      hairball.x < 0 ||
+      hairball.y > canvas.height ||
+      hairball.y < 0
+    ) {
+      return hairballs.splice(index, 1);
+    }
     hairball.draw(ctx);
     hairball.move(globalConst.bulletSpeed);
   });

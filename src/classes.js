@@ -9,6 +9,8 @@ const globalConst = {
   upSpriteHeight: 24,
   demonSpriteWidth: 132,
   demonSpriteHeight: 46,
+  hairballWidth: 16,
+  hairballHeight: 16,
   cols: 3,
   movement: 3,
   enemySpeed: 1,
@@ -48,7 +50,38 @@ class Cat extends Item {
       this.height * 3
     );
   }
-  updateFrame(frames) {
+  updateFrame(frames, catChosen) {
+    // update sprite to draw, adjusting width and height accordingly
+    switch (this.direction) {
+      case "E":
+      case "NE":
+      case "SE":
+        this.image.src = `./images/${catChosen}-right-sprite.png`;
+        this.width = globalConst.leftSpriteWidth / globalConst.cols;
+        this.height = globalConst.leftSpriteHeight;
+        break;
+      case "W":
+      case "NW":
+      case "SW":
+        this.image.src = `./images/${catChosen}-left-sprite.png`;
+        this.width = globalConst.rightSpriteWidth / globalConst.cols;
+        this.height = globalConst.rightSpriteHeight;
+        break;
+      case "N":
+        this.image.src = `./images/${catChosen}-up-sprite.png`;
+        this.width = globalConst.upSpriteWidth / globalConst.cols;
+        this.height = globalConst.upSpriteHeight;
+        break;
+      case "S":
+        this.image.src = `./images/${catChosen}-idle-sprite.png`;
+        this.width = globalConst.idleSpriteWidth / globalConst.cols;
+        this.height = globalConst.idleSpriteHeight;
+        break;
+
+      default:
+        break;
+    }
+
     if (frames % 60 <= 20) {
       this.srcx = 0 * this.width;
     }
@@ -186,8 +219,8 @@ class HairBall extends Item {
       this.height,
       this.x,
       this.y,
-      this.width / 2,
-      this.height / 2
+      this.width,
+      this.height
     );
   }
   alignCenter(cat) {
