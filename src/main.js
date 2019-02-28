@@ -1,10 +1,12 @@
 // World canvas
 let canvas = document.getElementById("world");
 let ctx = canvas.getContext("2d");
+let scoreNode = document.getElementById("score");
 let frames = 0;
 let interval = 0;
 let enemies = [];
 let hairballs = [];
+let score = 0;
 
 // retrieve chosen cat from local storage
 let catChosen = window.localStorage.getItem("catChosen");
@@ -27,13 +29,13 @@ function generateEnemies() {
     globalConst.demonSpriteWidth / globalConst.cols,
     globalConst.demonSpriteHeight,
     `./images/demon-white-sprite.png`,
-    cat
+    globalConst.demonPoints
   );
   enemies.push(enemy);
 }
 
 function drawEnemies() {
-  enemies.forEach((enemy, index) => {
+  enemies.forEach(enemy => {
     enemy.updateFrame(frames);
     enemy.draw(ctx);
     enemy.move(globalConst.enemySpeed, 0, canvas.width, canvas.height, 0, cat);
@@ -55,6 +57,19 @@ function drawHairballs() {
   });
 }
 
+function detectCollitions(bullets, enemies) {
+  enemies.forEach((enemy, indexEnemy) => {
+    bullets.forEach((bullet, indexBullet) => {
+      if (bullet.isTouching(enemy)) {
+        score += enemy.points;
+        scoreNode.innerText = score;
+        bullets.splice(indexBullet, 1);
+        enemies.splice(indexEnemy, 1);
+      }
+    });
+  });
+}
+
 window.onload = function() {
   interval = setInterval(() => {
     frames++;
@@ -63,7 +78,9 @@ window.onload = function() {
     cat.updateFrame(frames, catChosen);
     cat.draw(ctx);
     // move cat if it has an active direction
-    if (cat.direction)  cat.move(globalConst.movement, 0, canvas.width, canvas.height, 0);
+    if (cat.direction)
+      cat.move(globalConst.movement, 0, canvas.width, canvas.height, 0);
+    detectCollitions(hairballs, enemies);
     generateEnemies();
     drawHairballs();
     drawEnemies();
@@ -93,4 +110,3 @@ window.onload = function() {
     if (cat.direction) cat.orientation = cat.direction;
   });
 };
-

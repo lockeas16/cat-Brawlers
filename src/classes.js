@@ -1,12 +1,5 @@
 const globalConst = {
-  // idleSpriteWidth: 42,
-  // idleSpriteHeight: 29,
-  // leftSpriteWidth: 84,
-  // leftSpriteHeight: 23,
-  // rightSpriteWidth: 84,
-  // rightSpriteHeight: 23,
-  // upSpriteWidth: 42,
-  // upSpriteHeight: 24,
+  // sprite sizes
   idleSpriteWidth: 126,
   idleSpriteHeight: 87,
   leftSpriteWidth: 252,
@@ -20,9 +13,12 @@ const globalConst = {
   hairballWidth: 16,
   hairballHeight: 16,
   cols: 3,
+  // speed and movement properties
   movement: 3,
   enemySpeed: 1,
-  bulletSpeed: 4
+  bulletSpeed: 4,
+  // enemies properties
+  demonPoints: 1
 };
 
 class Item {
@@ -31,6 +27,14 @@ class Item {
     this.y = y;
     this.width = width;
     this.height = height;
+  }
+  isTouching(item) {
+    return (
+      this.x < item.x + item.width &&
+      this.x + this.width > item.x &&
+      this.y < item.y + item.height &&
+      this.y + this.height > item.y
+    );
   }
 }
 
@@ -157,12 +161,13 @@ class Cat extends Item {
 }
 
 class Enemy extends Item {
-  constructor(width, height, src) {
+  constructor(width, height, src, points) {
     super(0, 0, width, height);
     this.srcx = 0;
     this.srcy = 0;
     this.image = new Image();
     this.image.src = src;
+    this.points = points;
   }
   draw(ctx) {
     ctx.drawImage(
