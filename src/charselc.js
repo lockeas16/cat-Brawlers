@@ -11,17 +11,17 @@ let frameCount = globalConst.cols;
 let cat1 = new Cat(
   globalConst.idleSpriteWidth / globalConst.cols,
   globalConst.idleSpriteHeight,
-  "./images/cat-1-idle-sprite.png"
+  "./images/cat-1-idle-spriteBig.png"
 );
 let cat2 = new Cat(
   globalConst.idleSpriteWidth / globalConst.cols,
   globalConst.idleSpriteHeight,
-  "./images/cat-2-idle-sprite.png"
+  "./images/cat-2-idle-spriteBig.png"
 );
-cat1.x = canvasChar1.width / 2 - (cat1.width * 3 / 2);
-cat1.y = canvasChar1.height / 2 - (cat1.height * 3 / 2)
-cat2.x = canvasChar2.width / 2 - (cat2.width * 3 / 2);
-cat2.y = canvasChar2.height / 2 - (cat2.height * 3 / 2)
+cat1.x = canvasChar1.width / 2 - cat1.width/ 2;
+cat1.y = canvasChar1.height / 2 - cat1.height / 2;
+cat2.x = canvasChar2.width / 2 - cat2.width / 2;
+cat2.y = canvasChar2.height / 2 - cat2.height / 2;
 
 window.onload = function() {
   // clear current key in local storage

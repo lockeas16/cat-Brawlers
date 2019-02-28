@@ -1,12 +1,20 @@
 const globalConst = {
-  idleSpriteWidth: 42,
-  idleSpriteHeight: 29,
-  leftSpriteWidth: 84,
-  leftSpriteHeight: 23,
-  rightSpriteWidth: 84,
-  rightSpriteHeight: 23,
-  upSpriteWidth: 42,
-  upSpriteHeight: 24,
+  // idleSpriteWidth: 42,
+  // idleSpriteHeight: 29,
+  // leftSpriteWidth: 84,
+  // leftSpriteHeight: 23,
+  // rightSpriteWidth: 84,
+  // rightSpriteHeight: 23,
+  // upSpriteWidth: 42,
+  // upSpriteHeight: 24,
+  idleSpriteWidth: 126,
+  idleSpriteHeight: 87,
+  leftSpriteWidth: 252,
+  leftSpriteHeight: 69,
+  rightSpriteWidth: 252,
+  rightSpriteHeight: 69,
+  upSpriteWidth: 126,
+  upSpriteHeight: 72,
   demonSpriteWidth: 132,
   demonSpriteHeight: 46,
   hairballWidth: 16,
@@ -46,8 +54,8 @@ class Cat extends Item {
       this.height,
       this.x,
       this.y,
-      this.width * 3,
-      this.height * 3
+      this.width,
+      this.height
     );
   }
   updateFrame(frames, catChosen) {
@@ -56,24 +64,24 @@ class Cat extends Item {
       case "E":
       case "NE":
       case "SE":
-        this.image.src = `./images/${catChosen}-right-sprite.png`;
+        this.image.src = `./images/${catChosen}-right-spriteBig.png`;
         this.width = globalConst.leftSpriteWidth / globalConst.cols;
         this.height = globalConst.leftSpriteHeight;
         break;
       case "W":
       case "NW":
       case "SW":
-        this.image.src = `./images/${catChosen}-left-sprite.png`;
+        this.image.src = `./images/${catChosen}-left-spriteBig.png`;
         this.width = globalConst.rightSpriteWidth / globalConst.cols;
         this.height = globalConst.rightSpriteHeight;
         break;
       case "N":
-        this.image.src = `./images/${catChosen}-up-sprite.png`;
+        this.image.src = `./images/${catChosen}-up-spriteBig.png`;
         this.width = globalConst.upSpriteWidth / globalConst.cols;
         this.height = globalConst.upSpriteHeight;
         break;
       case "S":
-        this.image.src = `./images/${catChosen}-idle-sprite.png`;
+        this.image.src = `./images/${catChosen}-idle-spriteBig.png`;
         this.width = globalConst.idleSpriteWidth / globalConst.cols;
         this.height = globalConst.idleSpriteHeight;
         break;
@@ -93,13 +101,13 @@ class Cat extends Item {
     }
   }
   moveDown(mov, boundarie) {
-    if (this.y + mov + this.height * 3 < boundarie) this.y += mov;
+    if (this.y + mov + this.height < boundarie) this.y += mov;
   }
   moveUp(mov, boundarie) {
     if (this.y - mov > boundarie) this.y -= mov;
   }
   moveRight(mov, boundarie) {
-    if (this.x + mov + this.width * 3 < boundarie) this.x += mov;
+    if (this.x + mov + this.width < boundarie) this.x += mov;
   }
   moveLeft(mov, boundarie) {
     if (this.x - mov > boundarie) this.x -= mov;
@@ -227,24 +235,24 @@ class HairBall extends Item {
     let { x, y, width, height, orientation } = cat;
     switch (orientation) {
       case "N":
-        this.x = x + width / 2;
+        this.x = x + width / 2 - this.width / 2;
         this.y = y - this.height;
         break;
       case "S":
-        this.x = x + width / 2;
-        this.y = y + height * 3;
+        this.x = x + width / 2 - this.width / 2;
+        this.y = y + height;
         break;
       case "E":
       case "NE":
       case "SE":
-        this.x = x + width * 3;
-        this.y = y + height;
+        this.x = x + width;
+        this.y = y + height / 2;
         break;
       case "W":
       case "NW":
       case "SW":
         this.x = x - this.width;
-        this.y = y + height;
+        this.y = y + height / 2;
         break;
       default:
         break;
