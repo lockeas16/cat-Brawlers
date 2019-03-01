@@ -24,7 +24,7 @@ const globalConst = {
   // enemies properties
   demonPoints: 1,
   // cat properties
-  catHealth: 6,
+  catHealth: 1,
   invincibilityTime: 3000 //milliseconds
 };
 

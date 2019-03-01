@@ -5,7 +5,6 @@ let ctx = canvas.getContext("2d");
 let hudCanvas = document.getElementById("hud");
 let ctxHud = hudCanvas.getContext("2d");
 
-// let scoreNode = document.getElementById("score");
 let frames = 0;
 let interval = 0;
 let enemies = [];
@@ -43,9 +42,9 @@ function generateEnemies() {
 function drawEnemies() {
   enemies.forEach(enemy => {
     if (cat.isTouching(enemy) && !cat.invincible) {
+      cat.health--;
+      fishBar.shift();
       if (cat.health > 0) {
-        cat.health--;
-        fishBar.shift();
         cat.toggleInvincibility();
         // fire a timeout to shift invincibility
         setTimeout(() => {
@@ -103,6 +102,68 @@ function gameOver() {
   interval = undefined;
 }
 
+function start() {
+  interval = setInterval(update, 1000/60);
+}
+
+function restart() {
+  if (interval !== undefined) return;
+  frames = 0;
+  enemies = [];
+  hairballs = [];
+  fishBar = [];
+  score = 0;
+  interval = undefined;
+  cat = new Cat(
+    globalConst.idleSpriteWidth / globalConst.cols,
+    globalConst.idleSpriteHeight,
+    `./images/${catChosen}-idle-spriteBig.png`,
+    globalConst.catHealth
+  );
+  // center cat in canvas
+  // divide by 2 total width and total height of cat
+  cat.x = canvas.width / 2 - cat.width / 2;
+  cat.y = canvas.height / 2 - cat.height / 2;
+  for (let index = 0; index < cat.health; index++) {
+    fishBar.push(
+      new Fish(
+        globalConst.fishWidth,
+        globalConst.fishHeight,
+        "./images/fish.png"
+      )
+    );
+  }
+  start();
+}
+
+function update() {
+  frames++;
+  // canvas world
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  fondo.draw(ctx);
+  cat.updateFrame(frames, catChosen);
+  cat.draw(ctx);
+  // move cat if it has an active direction
+  if (cat.direction)
+    cat.move(globalConst.movement, 0, canvas.width, canvas.height, 0);
+  detectCollitions(hairballs, enemies);
+  generateEnemies();
+  drawHairballs();
+  drawEnemies();
+
+  // hud canvas
+  ctxHud.clearRect(0, 0, hudCanvas.width, hudCanvas.height);
+  fishBar.forEach((fish, index) => {
+    fish.x = index * fish.width + 5;
+    fish.y = 5;
+    fish.draw(ctxHud);
+  });
+  ctxHud.font = "20px Chicle";
+  ctxHud.fillText(`SCORE: ${score}`, 600, 50);
+
+  if (cat.health === 0) gameOver();
+}
+
 window.onload = function() {
   for (let index = 0; index < cat.health; index++) {
     fishBar.push(
@@ -113,34 +174,6 @@ window.onload = function() {
       )
     );
   }
-  interval = setInterval(() => {
-    frames++;
-    // canvas world
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    fondo.draw(ctx);
-    cat.updateFrame(frames, catChosen);
-    cat.draw(ctx);
-    // move cat if it has an active direction
-    if (cat.direction)
-      cat.move(globalConst.movement, 0, canvas.width, canvas.height, 0);
-    detectCollitions(hairballs, enemies);
-    generateEnemies();
-    drawHairballs();
-    drawEnemies();
-
-    // hud canvas
-    ctxHud.clearRect(0, 0, hudCanvas.width, hudCanvas.height);
-    fishBar.forEach((fish, index) => {
-      fish.x = index * fish.width + 5;
-      fish.y = 5;
-      fish.draw(ctxHud);
-    });
-    ctxHud.font = "20px Chicle";
-    ctxHud.fillText(`SCORE: ${score}`, 600, 50);
-
-    if (cat.health === 0) gameOver();
-  }, 1000 / 60);
-
   // add event listener to keys
   document.addEventListener("keydown", event => {
     cat.direction = keylogger.keyPress(event.keyCode);
@@ -154,14 +187,20 @@ window.onload = function() {
         globalConst.hairballHeight,
         "./images/Hairball2.png",
         cat.orientation
-      );
-      hairball.alignCenter(cat);
-      hairballs.push(hairball);
+        );
+        hairball.alignCenter(cat);
+        hairballs.push(hairball);
+      }
+      
+    if (event.keyCode === 82 && interval === undefined){
+      restart();
     }
   });
-
+  
   document.addEventListener("keyup", event => {
     cat.direction = keylogger.keyRelease(event.keyCode);
     if (cat.direction) cat.orientation = cat.direction;
   });
+  
+  start();
 };
