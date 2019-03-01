@@ -1,11 +1,16 @@
 // World canvas
 let canvas = document.getElementById("world");
 let ctx = canvas.getContext("2d");
-let scoreNode = document.getElementById("score");
+// hud canvas
+let hudCanvas = document.getElementById("hud");
+let ctxHud = hudCanvas.getContext("2d");
+
+// let scoreNode = document.getElementById("score");
 let frames = 0;
 let interval = 0;
 let enemies = [];
 let hairballs = [];
+let fishBar = [];
 let score = 0;
 
 // retrieve chosen cat from local storage
@@ -13,7 +18,8 @@ let catChosen = window.localStorage.getItem("catChosen");
 let cat = new Cat(
   globalConst.idleSpriteWidth / globalConst.cols,
   globalConst.idleSpriteHeight,
-  `./images/${catChosen}-idle-spriteBig.png`
+  `./images/${catChosen}-idle-spriteBig.png`,
+  globalConst.catHealth
 );
 // center cat in canvas
 // divide by 2 total width and total height of cat
@@ -36,6 +42,17 @@ function generateEnemies() {
 
 function drawEnemies() {
   enemies.forEach(enemy => {
+    if (cat.isTouching(enemy) && !cat.invincible) {
+      if (cat.health > 0) {
+        cat.health--;
+        fishBar.shift();
+        cat.toggleInvincibility();
+        // fire a timeout to shift invincibility
+        setTimeout(() => {
+          cat.toggleInvincibility();
+        }, globalConst.invincibilityTime);
+      }
+    }
     enemy.updateFrame(frames);
     enemy.draw(ctx);
     enemy.move(globalConst.enemySpeed, 0, canvas.width, canvas.height, 0, cat);
@@ -62,7 +79,7 @@ function detectCollitions(bullets, enemies) {
     bullets.forEach((bullet, indexBullet) => {
       if (bullet.isTouching(enemy)) {
         score += enemy.points;
-        scoreNode.innerText = score;
+        // scoreNode.innerText = score;
         bullets.splice(indexBullet, 1);
         enemies.splice(indexEnemy, 1);
       }
@@ -70,9 +87,35 @@ function detectCollitions(bullets, enemies) {
   });
 }
 
+function gameOver() {
+  let gameOverImg = new Image();
+  gameOverImg.src = "./images/gameOver.png";
+  gameOverImg.onload = () => {
+    ctx.drawImage(
+      gameOverImg,
+      canvas.width / 2 - globalConst.goImgWidth,
+      canvas.height / 2 - globalConst.goImgHeight,
+      globalConst.goImgWidth * 2,
+      globalConst.goImgHeight * 2
+    );
+  };
+  clearInterval(interval);
+  interval = undefined;
+}
+
 window.onload = function() {
+  for (let index = 0; index < cat.health; index++) {
+    fishBar.push(
+      new Fish(
+        globalConst.fishWidth,
+        globalConst.fishHeight,
+        "./images/fish.png"
+      )
+    );
+  }
   interval = setInterval(() => {
     frames++;
+    // canvas world
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     fondo.draw(ctx);
     cat.updateFrame(frames, catChosen);
@@ -84,6 +127,18 @@ window.onload = function() {
     generateEnemies();
     drawHairballs();
     drawEnemies();
+
+    // hud canvas
+    ctxHud.clearRect(0, 0, hudCanvas.width, hudCanvas.height);
+    fishBar.forEach((fish, index) => {
+      fish.x = index * fish.width + 5;
+      fish.y = 5;
+      fish.draw(ctxHud);
+    });
+    ctxHud.font = "20px Chicle";
+    ctxHud.fillText(`SCORE: ${score}`, 600, 50);
+
+    if (cat.health === 0) gameOver();
   }, 1000 / 60);
 
   // add event listener to keys

@@ -12,13 +12,20 @@ const globalConst = {
   demonSpriteHeight: 46,
   hairballWidth: 16,
   hairballHeight: 16,
+  fishWidth: 64,
+  fishHeight: 46,
+  goImgWidth: 179,
+  goImgHeight: 127,
   cols: 3,
   // speed and movement properties
   movement: 3,
   enemySpeed: 1,
   bulletSpeed: 4,
   // enemies properties
-  demonPoints: 1
+  demonPoints: 1,
+  // cat properties
+  catHealth: 6,
+  invincibilityTime: 3000 //milliseconds
 };
 
 class Item {
@@ -39,7 +46,7 @@ class Item {
 }
 
 class Cat extends Item {
-  constructor(width, height, src) {
+  constructor(width, height, src, health) {
     super(0, 0, width, height);
     this.srcx = 0;
     this.srcy = 0;
@@ -47,6 +54,8 @@ class Cat extends Item {
     this.image.src = src;
     this.direction = undefined;
     this.orientation = "S";
+    this.health = health;
+    this.invincible = false;
   }
 
   draw(ctx) {
@@ -158,6 +167,9 @@ class Cat extends Item {
         break;
     }
   }
+  toggleInvincibility() {
+    return (this.invincible = !this.invincible);
+  }
 }
 
 class Enemy extends Item {
@@ -206,11 +218,13 @@ class Enemy extends Item {
     if (this.x - mov > boundarie) this.x -= mov;
   }
   move(mov, boundTop, boundRight, boundBottom, boundLeft, target) {
-    let { x, y } = target;
-    if (this.x < x) this.moveRight(mov, boundRight);
-    if (this.x > x) this.moveLeft(mov, boundLeft);
-    if (this.y < y) this.moveDown(mov, boundBottom);
-    if (this.y > y) this.moveUp(mov, boundTop);
+    let { x, y, width, height } = target;
+    let xTargetCenter = x + width / 2 - this.width / 2;
+    let yTargetCenter = y + height / 2 - this.height / 2;
+    if (this.x < xTargetCenter) this.moveRight(mov, boundRight);
+    if (this.x > xTargetCenter) this.moveLeft(mov, boundLeft);
+    if (this.y < yTargetCenter) this.moveDown(mov, boundBottom);
+    if (this.y > yTargetCenter) this.moveUp(mov, boundTop);
   }
 }
 
@@ -284,6 +298,17 @@ class HairBall extends Item {
       default:
         break;
     }
+  }
+}
+
+class Fish extends Item {
+  constructor(width, height, src) {
+    super(0, 0, width, height);
+    this.image = new Image();
+    this.image.src = src;
+  }
+  draw(ctx) {
+    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 

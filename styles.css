@@ -73,13 +73,14 @@ div.char-cont {
 
 #char-1,
 #char-2,
-#world {
+#hud {
   margin: 0 1vw;
   border: 3px solid red;
 }
 
 div.game-cont {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
