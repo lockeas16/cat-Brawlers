@@ -49,4 +49,16 @@ window.onload = function() {
     // save choice in local storage
     window.localStorage.setItem("catChosen", "cat-2");
   });
+
+  // event listeners to add a modal on mouser over and remove it on mouse out
+  let playerSections = document.getElementsByClassName("char-cont");
+  for (let index = 0; index < playerSections.length; index++) {
+    playerSections[index].addEventListener("mouseover",()=>{
+      playerSections[index].classList.add("playermodal");
+    })
+    playerSections[index].addEventListener("mouseout",()=>{
+      playerSections[index].classList.remove("playermodal");
+    })
+  }
+
 };

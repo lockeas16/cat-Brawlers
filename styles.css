@@ -37,9 +37,13 @@ section.options > a {
   border: 2px solid rgba(255, 255, 255, 0);
   transition: all 0.3s;
   box-shadow: 0 0 40px 40px gainsboro inset; /*shadow inside element */
+  -webkit-animation: bounce 3s infinite linear;
+  -moz-animation: bounce 3s infinite linear;
   animation: bounce 3s infinite linear;
 }
 section.options > a:last-child {
+  -webkit-animation-delay: 0.14s;
+  -moz-animation-delay: 0.14s;
   animation-delay: 0.14s; /* to animate the element at different time than the first anchor */
 }
 
@@ -105,6 +109,8 @@ section.landing h1 {
   padding: 10px;
   border-radius: 5%;
   position: relative;
+  -webkit-animation: colorVShape 4s infinite linear;
+  -moz-animation: colorVShape 4s infinite linear;
   animation: colorVShape 4s infinite linear;
 }
 
@@ -120,6 +126,8 @@ section.landing img:hover {
 }
 
 section.landing span.exclamation {
+  -webkit-animation: colors 2s infinite linear;
+  -moz-animation: colors 2s infinite linear;
   animation: colors 2s infinite linear;
 }
 
@@ -170,22 +178,79 @@ section.landing span.exclamation {
 }
 
 /* styles for character selection screen */
-div.players {
+header.heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 18vh;
+  background: url("./images/dangerTopBar.png");
+}
+
+header.heading h1 {
+  font-family: "Gloria Hallelujah", cursive;
+  font-size: 3em;
+  color: white;
+  text-shadow: 2px 4px 5px black;
+  padding: 0 15vw;
+  border: 15px solid rgb(58, 53, 50);
+  border-radius: 20px;
+  background-color: rgb(82, 76, 73);
+}
+
+section.players {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  height: 64vh;
+  background-color: black;
 }
 
-div.char-cont {
+section.char-cont {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 0 0.5vw;
+  border-radius: 20px;
 }
 
-#char-1,
-#char-2,
+.playermodal {
+  background-color: rgba(234, 115, 37, 0.6);
+}
+
+section.char-cont img:hover {
+  transform: scale(1.5);
+  transition: all 1s;
+}
+
+section.char-cont p {
+  font-family: "Gloria Hallelujah", cursive;
+  font-size: 1.5em;
+  color: rgb(254, 223, 81);
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    /* seven shadows in total, with different blur radius sizes */
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff7e00,
+      0 0 40px #ff7e00, 0 0 50px #ff7e00, 0 0 60px #ff7e00, 0 0 70px #ff7e00;
+  }
+  to {
+    /* also seven shadows in total, with slightly bigger blur radius sizes each*/
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff8e1e, 0 0 40px #ff8e1e,
+      0 0 50px #ff8e1e, 0 0 60px #ff8e1e, 0 0 70px #ff8e1e, 0 0 80px #ff8e1e;
+  }
+}
+
+footer.foot {
+  height: 18vh;
+  background: url("./images/dangerTopBar.png");
+}
+
 #hud {
   margin: 0 1vw;
   border: 3px solid red;

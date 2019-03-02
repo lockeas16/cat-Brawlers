@@ -34,6 +34,4 @@ window.onload = function() {
     // show starter section
     document.getElementsByTagName("section")[0].style.display = "flex";
   })
-  // hide landing
-  // document.getElementsByTagName("section")[0].style.display = "none";
 };
