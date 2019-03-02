@@ -16,6 +16,8 @@ const globalConst = {
   fishHeight: 46,
   goImgWidth: 179,
   goImgHeight: 127,
+  tryImgWidth: 330,
+  tryImgHeight: 28,
   cols: 3,
   // speed and movement properties
   movement: 3,
@@ -24,7 +26,7 @@ const globalConst = {
   // enemies properties
   demonPoints: 1,
   // cat properties
-  catHealth: 1,
+  catHealth: 5,
   invincibilityTime: 3000 //milliseconds
 };
 
@@ -56,6 +58,7 @@ class Cat extends Item {
     this.orientation = "S";
     this.health = health;
     this.invincible = false;
+    this.wasHit = false;
   }
 
   draw(ctx) {
@@ -101,6 +104,19 @@ class Cat extends Item {
 
       default:
         break;
+    }
+
+    // overlay sprite to have visual effect of being damaged
+    if (this.wasHit) {
+      if (!this.image.src.includes("DMG")) {
+        let url = this.image.src;
+        this.image.src = url.replace("spriteBig", "spriteBigDMG");
+      }
+    } else {
+      if (this.image.src.includes("DMG")) {
+        let url = this.image.src;
+        this.image.src = url.replace("spriteBigDMG", "spriteBig");
+      }
     }
 
     if (frames % 60 <= 20) {
@@ -169,6 +185,9 @@ class Cat extends Item {
   }
   toggleInvincibility() {
     return (this.invincible = !this.invincible);
+  }
+  toggleDamage() {
+    return (this.wasHit = !this.wasHit);
   }
 }
 

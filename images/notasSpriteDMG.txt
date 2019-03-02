@@ -1,0 +1,7 @@
+In Pinta
+   apply sepia
+   apply hue/saturation
+      hue: -25
+      saturation: 160
+      lightness: 0
+

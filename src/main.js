@@ -43,12 +43,14 @@ function drawEnemies() {
   enemies.forEach(enemy => {
     if (cat.isTouching(enemy) && !cat.invincible) {
       cat.health--;
+      cat.toggleDamage();
       fishBar.shift();
       if (cat.health > 0) {
         cat.toggleInvincibility();
         // fire a timeout to shift invincibility
         setTimeout(() => {
           cat.toggleInvincibility();
+          cat.toggleDamage();
         }, globalConst.invincibilityTime);
       }
     }
@@ -78,7 +80,6 @@ function detectCollitions(bullets, enemies) {
     bullets.forEach((bullet, indexBullet) => {
       if (bullet.isTouching(enemy)) {
         score += enemy.points;
-        // scoreNode.innerText = score;
         bullets.splice(indexBullet, 1);
         enemies.splice(indexEnemy, 1);
       }
@@ -98,12 +99,23 @@ function gameOver() {
       globalConst.goImgHeight * 2
     );
   };
+  let tryAgainImg = new Image();
+  tryAgainImg.src = "./images/tryAgain.png";
+  tryAgainImg.onload = () => {
+    ctx.drawImage(
+      tryAgainImg,
+      canvas.width / 2 - globalConst.tryImgWidth / 2,
+      canvas.height / 2 - globalConst.tryImgHeight + globalConst.goImgHeight + 10,
+      globalConst.tryImgWidth,
+      globalConst.tryImgHeight
+    );
+  };
   clearInterval(interval);
   interval = undefined;
 }
 
 function start() {
-  interval = setInterval(update, 1000/60);
+  interval = setInterval(update, 1000 / 60);
 }
 
 function restart() {
@@ -161,7 +173,7 @@ function update() {
   ctxHud.font = "20px Chicle";
   ctxHud.fillText(`SCORE: ${score}`, 600, 50);
 
-  if (cat.health === 0) gameOver();
+  if (cat.health <= 0) gameOver();
 }
 
 window.onload = function() {
@@ -187,20 +199,20 @@ window.onload = function() {
         globalConst.hairballHeight,
         "./images/Hairball2.png",
         cat.orientation
-        );
-        hairball.alignCenter(cat);
-        hairballs.push(hairball);
-      }
-      
-    if (event.keyCode === 82 && interval === undefined){
+      );
+      hairball.alignCenter(cat);
+      hairballs.push(hairball);
+    }
+
+    if (event.keyCode === 82 && interval === undefined) {
       restart();
     }
   });
-  
+
   document.addEventListener("keyup", event => {
     cat.direction = keylogger.keyRelease(event.keyCode);
     if (cat.direction) cat.orientation = cat.direction;
   });
-  
+
   start();
 };

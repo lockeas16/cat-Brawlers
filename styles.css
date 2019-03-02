@@ -6,54 +6,167 @@
 }
 
 /* styles for index */
-
-.game-present {
-  display: flex;
+section.container {
+  display: none;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 95vh;
-  background-image: url("./images/backGround.jpg");
-  background-position: center;
-  background-size: contain;
 }
 
-section.options {
-  display: flex;
-  flex-direction: row;
-  background-image: url("./images/pink_paws.gif");
-}
-
-div.game-present > div.game-name h1 {
+div.modal {
+  display: block;
+  position: fixed;
+  z-index: 1; /* stays on top of the box */
   padding-top: 10vh;
-  margin-bottom: 15vw;
-  font-family: "Chicle", cursive;
-  font-size: 10em;
-  color: orange;
-  text-shadow: 2px 2px #fff;
-}
-
-div.game-present div.cat-sil {
-  width: 30vw;
-  height: 30vh;
-}
-
-div.game-present div.cat-sil > img {
+  padding-left: 10vw;
+  left: 0;
+  top: 0;
   width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
-section.options {
-  display: flex;
-  justify-content: space-evenly;
-}
-
+/* styles for anchor */
 section.options > a {
   text-decoration: none;
   font-family: "Gloria Hallelujah", cursive;
-  background-color: gray;
-  padding: 4px;
+  padding: 1em;
+  color: black;
+  border-radius: 2em;
+  margin-left: 10vw;
+  position: relative; /* necessary for the animation to work */
+  border: 2px solid rgba(255, 255, 255, 0);
+  transition: all 0.3s;
+  box-shadow: 0 0 40px 40px gainsboro inset; /*shadow inside element */
+  animation: bounce 3s infinite linear;
+}
+section.options > a:last-child {
+  animation-delay: 0.14s; /* to animate the element at different time than the first anchor */
+}
+
+section.options > a:hover {
   color: white;
-  border-radius: 20%;
+  padding: 2em;
+  border-color: rgba(255, 165, 0, 1);
+  background-color: rgba(255, 165, 0, 0.5);
+  border-radius: 50%;
+  text-shadow: 2px 4px 5px black;
+  box-shadow: 0 0 10px 0 gray inset;
+}
+
+section.options > h1 {
+  margin-bottom: 1.5vw;
+  font-family: "Chicle", cursive;
+  font-size: 10em;
+  color: orange;
+  text-shadow: 2px 4px #fff;
+}
+
+@keyframes bounce {
+  0% {
+    top: 0em;
+  }
+  40% {
+    top: 0em;
+  }
+  43% {
+    top: -1em;
+  }
+  46% {
+    top: 0em;
+  }
+  48% {
+    top: -0.8em;
+  }
+  50% {
+    top: 0em;
+  }
+  100% {
+    top: 0em;
+  }
+}
+
+/* styles for landing section */
+section.landing {
+  height: 100vh; /* whole screen*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: rgb(0, 0, 0, 0.1);
+}
+
+section.landing h1 {
+  margin-bottom: 1.5vw;
+  margin-left: 1vw;
+  font-family: "Chicle", cursive;
+  font-size: 10em;
+  color: orange;
+  text-shadow: 2px 4px gray;
+  padding: 10px;
+  border-radius: 5%;
+  position: relative;
+  animation: colorVShape 4s infinite linear;
+}
+
+section.landing p {
+  font-family: "Gloria Hallelujah", cursive;
+  font-size: 1.5em;
+  color: rgb(80, 80, 80);
+}
+
+section.landing img:hover {
+  transform: scale(2);
+  transition: all 1s;
+}
+
+section.landing span.exclamation {
+  animation: colors 2s infinite linear;
+}
+
+@keyframes colorVShape {
+  0% {
+    color: orange;
+    left: -20px;
+    top: -20px;
+  }
+  25% {
+    color: rgb(231, 75, 14);
+    left: 0px;
+    top: 0px;
+  }
+  50% {
+    color: rgb(117, 42, 0);
+    left: 20px;
+    top: -20px;
+  }
+  75% {
+    color: rgb(231, 75, 14);
+    left: 0px;
+    top: 0px;
+  }
+  100% {
+    color: orange;
+    left: -20px;
+    top: -20px;
+  }
+}
+
+@keyframes colors {
+  0% {
+    color: rgb(45, 189, 47);
+  }
+  25% {
+    color: rgb(20, 95, 179);
+  }
+  50% {
+    color: rgb(250, 131, 5);
+  }
+  75% {
+    color: rgb(227, 0, 0);
+  }
+  100% {
+    color: rgb(40, 66, 179);
+  }
 }
 
 /* styles for character selection screen */

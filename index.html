@@ -9,15 +9,23 @@
   </head>
   <body>
     <header>
-      <div class="game-present">
-        <div class="game-name">
-          <h1>Cat Brawlers</h1>
+      <section class="container">
+        <!-- modal to display html elements on top of canvas -->
+        <div class="modal">
+          <section class="options">
+            <h1>Cat Brawlers</h1>
+            <a href="charselc.html">START GAME</a>
+            <a href="instruc.html">INSTRUCTIONS</a>
+          </section>
         </div>
-      </div>
-      <section class="options">
-        <a href="charselc.html">START GAME</a>
-        <a href="instruc.html">INSTRUCTIONS</a>
+        <canvas id="landing" width="1600" height="850"></canvas>
+      </section>
+      <section class="landing">
+        <h1>Cat Brawlers</h1>
+        <img id="pawStart" src="images/cat-paw-pixilart.png" alt="paws">
+        <p>Click the paw to start<span class="exclamation">!!!!</span></p>
       </section>
     </header>
+    <script src="./src/landing.js"></script>
   </body>
 </html>
