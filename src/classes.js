@@ -248,6 +248,33 @@ class Enemy extends Item {
     if (this.y < yTargetCenter) this.moveDown(mov, boundBottom);
     if (this.y > yTargetCenter) this.moveUp(mov, boundTop);
   }
+  chooseSpawnPoint(boundRight,boundBottom) {
+    switch (randomNum(4)) {
+      // top left point
+      case 0:
+        this.x = -this.width;
+        this.y = -this.height;
+        break;
+      // top right spawn point
+      case 1:
+        this.x = boundRight + this.width;
+        this.y = -this.height;
+        break;
+      // bottom right spawn point
+      case 2:
+        this.x = boundRight + this.width;
+        this.y = boundBottom + this.height;
+        break;
+      // bottom left spawn point
+      case 3:
+        this.x = -this.width;
+        this.y = boundBottom + this.height;
+        break;
+  
+      default:
+        break;
+    }
+  }
 }
 
 class HairBall extends Item {
@@ -384,4 +411,8 @@ class keyLogger {
     if (this.keys[40] && this.keys[37]) return "SW";
     if (this.keys[40] && this.keys[39]) return "SE";
   }
+}
+
+function randomNum(max, min="0") {
+  return Math.floor(Math.random() * (max - min) + min);
 }

@@ -58,7 +58,7 @@ section.landing {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: rgb(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 section.landing h1 {
@@ -202,7 +202,7 @@ section.grid article.box {
   align-items: center;
   flex-direction: row;
   position: relative;
-  background-color: rgba(73, 131, 197);
+  background-color: rgb(73, 131, 197);
   margin-bottom: 1vw;
   border-radius: 20px;
 }
@@ -270,7 +270,10 @@ section.instr button:hover {
 
 #hud {
   margin: 0 1vw;
-  border: 3px solid red;
+  background: url("./images/catHUDBanner.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-bottom: 1vh;
 }
 
 section.game-cont {

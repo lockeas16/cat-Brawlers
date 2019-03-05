@@ -6,7 +6,7 @@ let hudCanvas = document.getElementById("hud");
 let ctxHud = hudCanvas.getContext("2d");
 
 let frames = 0;
-let interval = 0;
+let interval = undefined;
 let enemies = [];
 let hairballs = [];
 let fishBar = [];
@@ -25,7 +25,11 @@ let cat = new Cat(
 cat.x = canvas.width / 2 - cat.width / 2;
 cat.y = canvas.height / 2 - cat.height / 2;
 
-let fondo = new Background(canvas.width, canvas.height, "./images/floor-1.jpg");
+let fondo = new Background(
+  canvas.width,
+  canvas.height,
+  "./images/gameBackground.png"
+);
 let keylogger = new keyLogger();
 
 function generateEnemies() {
@@ -36,6 +40,7 @@ function generateEnemies() {
     `./images/demon-white-sprite.png`,
     globalConst.demonPoints
   );
+  enemy.chooseSpawnPoint(canvas.width, canvas.height);
   enemies.push(enemy);
 }
 
@@ -169,12 +174,18 @@ function update() {
   // hud canvas
   ctxHud.clearRect(0, 0, hudCanvas.width, hudCanvas.height);
   fishBar.forEach((fish, index) => {
-    fish.x = index * fish.width + 5;
-    fish.y = 5;
+    fish.x = index * fish.width + 15;
+    fish.y = hudCanvas.height / 2;
     fish.draw(ctxHud);
   });
-  ctxHud.font = "20px Chicle";
-  ctxHud.fillText(`SCORE: ${score}`, 600, 50);
+  ctxHud.font = "25px Chicle";
+  // gradient for text
+  let gradient = ctxHud.createLinearGradient(580, 0, hudCanvas.width, 0);
+  gradient.addColorStop("0", "#b35c05");
+  gradient.addColorStop("0.5", "#f0750f");
+  gradient.addColorStop("1.0", "#f09537");
+  ctxHud.fillStyle = gradient;
+  ctxHud.fillText(`SCORE: ${score}`, 580, 80);
 
   if (cat.health <= 0) gameOver();
 }
@@ -195,17 +206,29 @@ window.onload = function() {
         )
       );
     }
+    let audio = new Audio();
+    audio.src = "./sounds/Cyborg Ninja.mp3";
+    audio.loop = true;
+    audio.volume = 0.6;
+    // audio.play();
     start();
   });
 
   // add event listener to keys
   document.addEventListener("keydown", event => {
+    if (event.keyCode === 82 && interval === undefined) {
+      restart();
+    }
+    if (interval === undefined) return;
     cat.direction = keylogger.keyPress(event.keyCode);
     // orientation is used to give a direction to the hairballs
     if (cat.direction) cat.orientation = cat.direction;
     // space bar doesn't work when arrow up and arrow left are being pressed? odd...
     // used other key instead
     if (event.keyCode === globalConst.shootKey) {
+      let audioShoot = new Audio();
+      audioShoot.src = "./sounds/shot.wav";
+      audioShoot.play();
       let hairball = new HairBall(
         globalConst.hairballWidth,
         globalConst.hairballHeight,
@@ -215,13 +238,10 @@ window.onload = function() {
       hairball.alignCenter(cat);
       hairballs.push(hairball);
     }
-
-    if (event.keyCode === 82 && interval === undefined) {
-      restart();
-    }
   });
 
   document.addEventListener("keyup", event => {
+    if (interval === undefined) return;
     cat.direction = keylogger.keyRelease(event.keyCode);
     if (cat.direction) cat.orientation = cat.direction;
   });
