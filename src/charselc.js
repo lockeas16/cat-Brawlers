@@ -60,5 +60,4 @@ window.onload = function() {
       playerSections[index].classList.remove("playermodal");
     })
   }
-
 };

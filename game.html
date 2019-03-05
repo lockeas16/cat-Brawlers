@@ -8,13 +8,34 @@
     <title>Cat Brawlers</title>
   </head>
   <body>
-    <!-- <div>
-      <h1>SCORE: <span id="score">0</span></h1>
-    </div> -->
-    <div class="game-cont">
-      <canvas id="hud" width="700px" height="50px"></canvas>
-      <canvas id="world" width="700px" height="700px"></canvas>
-    </div>
+    <section class="instr">
+      <section class="grid">
+        <h1>How to Play</h1>
+        <article class="box align-left appear-left">
+          <img src="./images/moveInstr2.png" alt="moveInstr" />
+          <p>Use <span>arrow keys</span> to move</p>
+        </article>
+        <article class="box align-right appear-right">
+          <p>
+            Shoot hairballs with <span>Enter</span> <br />
+            direction depends on cat's direction
+          </p>
+          <img src="./images/shootInstr2.png" alt="moveInstr" />
+        </article>
+        <article class="box align-left appear-left">
+          <img src="./images/shootInstr2.png" alt="moveInstr" />
+          <p>
+            Dodge enemies and destroy <br />
+            them to earn <span>points</span>
+          </p>
+        </article>
+        <button class="btn" id="startBtn" type="button">Start!</button>
+      </section>
+      <section class="game-cont">
+        <canvas id="hud" width="700px" height="50px"></canvas>
+        <canvas id="world" width="700px" height="700px"></canvas>
+      </section>
+    </section>
     <script src="./src/classes.js"></script>
     <script src="./src/main.js"></script>
   </body>

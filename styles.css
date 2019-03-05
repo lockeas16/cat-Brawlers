@@ -4,8 +4,9 @@
   padding: 0;
   margin: 0;
 }
-
+/*-------------------------------------------*/
 /* styles for index */
+/*-------------------------------------------*/
 section.container {
   display: none;
   justify-content: center;
@@ -28,23 +29,6 @@ div.modal {
 /* styles for anchor */
 section.options > a {
   text-decoration: none;
-  font-family: "Gloria Hallelujah", cursive;
-  padding: 1em;
-  color: black;
-  border-radius: 2em;
-  margin-left: 10vw;
-  position: relative; /* necessary for the animation to work */
-  border: 2px solid rgba(255, 255, 255, 0);
-  transition: all 0.3s;
-  box-shadow: 0 0 40px 40px gainsboro inset; /*shadow inside element */
-  -webkit-animation: bounce 3s infinite linear;
-  -moz-animation: bounce 3s infinite linear;
-  animation: bounce 3s infinite linear;
-}
-section.options > a:last-child {
-  -webkit-animation-delay: 0.14s;
-  -moz-animation-delay: 0.14s;
-  animation-delay: 0.14s; /* to animate the element at different time than the first anchor */
 }
 
 section.options > a:hover {
@@ -65,31 +49,9 @@ section.options > h1 {
   text-shadow: 2px 4px #fff;
 }
 
-@keyframes bounce {
-  0% {
-    top: 0em;
-  }
-  40% {
-    top: 0em;
-  }
-  43% {
-    top: -1em;
-  }
-  46% {
-    top: 0em;
-  }
-  48% {
-    top: -0.8em;
-  }
-  50% {
-    top: 0em;
-  }
-  100% {
-    top: 0em;
-  }
-}
-
+/*-------------------------------------------*/
 /* styles for landing section */
+/*-------------------------------------------*/
 section.landing {
   height: 100vh; /* whole screen*/
   display: flex;
@@ -129,6 +91,219 @@ section.landing span.exclamation {
   -webkit-animation: colors 2s infinite linear;
   -moz-animation: colors 2s infinite linear;
   animation: colors 2s infinite linear;
+}
+
+/*-------------------------------------------*/
+/* styles for character selection screen */
+/*-------------------------------------------*/
+header.heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 18vh;
+  background: url("./images/dangerTopBar.png");
+}
+
+header.heading h1 {
+  font-family: "Gloria Hallelujah", cursive;
+  font-size: 3em;
+  color: white;
+  text-shadow: 2px 4px 5px black;
+  padding: 0 15vw;
+  border: 15px solid rgb(58, 53, 50);
+  border-radius: 20px;
+  background-color: rgb(82, 76, 73);
+}
+
+section.players {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 64vh;
+  background-color: black;
+}
+
+section.char-cont {
+  margin: 0 0.5vw;
+  border-radius: 20px;
+  background-color: rgba(83, 78, 78, 0.2);
+}
+
+/* as everything is inside the anchor, use flex box to center everything */
+section.char-cont a {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.playermodal {
+  /* important to override section own background */
+  background-color: rgba(234, 115, 37, 0.6) !important;
+}
+
+section.char-cont img:hover {
+  transform: scale(1.5);
+  transition: all 1s;
+}
+
+section.char-cont p.charname {
+  font-family: "Gloria Hallelujah", cursive;
+  font-size: 1.5em;
+  color: gray;
+}
+
+section.char-cont :hover p.charname {
+  color: rgb(254, 223, 81);
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+footer.foot {
+  height: 18vh;
+  background: url("./images/dangerTopBar.png");
+}
+
+/*-------------------------------------------*/
+/* styles for game page */
+/*-------------------------------------------*/
+
+section.instr {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: url("./images/blackcatBack.png");
+}
+
+section.instr section.grid > h1 {
+  margin-bottom: 1.5vw;
+  font-family: "Chicle", cursive;
+  font-size: 3em;
+  color: orange;
+  text-shadow: 2px 4px #fff;
+  text-align: center;
+}
+
+section.instr section.grid article.box p {
+  font-family: "Gloria Hallelujah", cursive;
+  font-size: 1.2em;
+  color: white;
+  text-align: center;
+}
+
+section.grid article.box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  position: relative;
+  background-color: rgba(73, 131, 197);
+  margin-bottom: 1vw;
+  border-radius: 20px;
+}
+
+section.grid article.box img {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin: 1vw;
+}
+
+section.grid article.box span {
+  -webkit-animation: colors 2s infinite linear;
+  -moz-animation: colors 2s infinite linear;
+  animation: colors 2s infinite linear;
+}
+
+.align-left {
+  justify-content: flex-start;
+  left: -10vw;
+}
+
+.appear-left {
+  animation: appearFromLeft 2s 1 ease-out;
+}
+
+.align-right {
+  justify-content: flex-end;
+  right: -10vw;
+}
+
+.appear-right {
+  animation: appearFromRight 2s 1 ease-out;
+}
+
+.btn{
+  font-family: "Gloria Hallelujah", cursive;
+  padding: 1em;
+  color: black;
+  border-radius: 2em;
+  margin-left: 10vw;
+  position: relative; /* necessary for the animation to work */
+  border: 2px solid rgba(255, 255, 255, 0);
+  transition: all 0.3s;
+  box-shadow: 0 0 40px 40px gainsboro inset; /*shadow inside element */
+  -webkit-animation: bounce 3s infinite linear;
+  -moz-animation: bounce 3s infinite linear;
+  animation: bounce 3s infinite linear;
+}
+
+section.instr button{
+  font-size: 1.5em;
+}
+section.instr button:hover {
+  color: white;
+  padding: 2em;
+  border-color: rgba(255, 165, 0, 1);
+  background-color: rgba(255, 165, 0, 0.5);
+  border-radius: 50%;
+  text-shadow: 2px 4px 5px black;
+  box-shadow: 0 0 10px 0 gray inset;
+}
+
+/*-------------------------------------------*/
+/* styles for canvas section */
+/*-------------------------------------------*/
+
+#hud {
+  margin: 0 1vw;
+  border: 3px solid red;
+}
+
+section.game-cont {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* animations */
+@keyframes bounce {
+  0% {
+    top: 0em;
+  }
+  40% {
+    top: 0em;
+  }
+  43% {
+    top: -1em;
+  }
+  46% {
+    top: 0em;
+  }
+  48% {
+    top: -0.8em;
+  }
+  50% {
+    top: 0em;
+  }
+  100% {
+    top: 0em;
+  }
 }
 
 @keyframes colorVShape {
@@ -173,66 +348,9 @@ section.landing span.exclamation {
     color: rgb(227, 0, 0);
   }
   100% {
-    color: rgb(40, 66, 179);
+    color: rgb(140, 40, 179);
   }
 }
-
-/* styles for character selection screen */
-header.heading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 18vh;
-  background: url("./images/dangerTopBar.png");
-}
-
-header.heading h1 {
-  font-family: "Gloria Hallelujah", cursive;
-  font-size: 3em;
-  color: white;
-  text-shadow: 2px 4px 5px black;
-  padding: 0 15vw;
-  border: 15px solid rgb(58, 53, 50);
-  border-radius: 20px;
-  background-color: rgb(82, 76, 73);
-}
-
-section.players {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 64vh;
-  background-color: black;
-}
-
-section.char-cont {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 0 0.5vw;
-  border-radius: 20px;
-}
-
-.playermodal {
-  background-color: rgba(234, 115, 37, 0.6);
-}
-
-section.char-cont img:hover {
-  transform: scale(1.5);
-  transition: all 1s;
-}
-
-section.char-cont p {
-  font-family: "Gloria Hallelujah", cursive;
-  font-size: 1.5em;
-  color: rgb(254, 223, 81);
-  -webkit-animation: glow 1s ease-in-out infinite alternate;
-  -moz-animation: glow 1s ease-in-out infinite alternate;
-  animation: glow 1s ease-in-out infinite alternate;
-}
-
 @keyframes glow {
   from {
     /* seven shadows in total, with different blur radius sizes */
@@ -246,19 +364,44 @@ section.char-cont p {
   }
 }
 
-footer.foot {
-  height: 18vh;
-  background: url("./images/dangerTopBar.png");
+@keyframes appearFromLeft {
+  0% {
+    left: -100vw;
+  }
+  20% {
+    left: -60vw;
+  }
+  40% {
+    left: -20vw;
+  }
+  60% {
+    left: 0vw;
+  }
+  80% {
+    left: 15vw;
+  }
+  100% {
+    left: -10vw;
+  }
 }
 
-#hud {
-  margin: 0 1vw;
-  border: 3px solid red;
-}
-
-div.game-cont {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+@keyframes appearFromRight {
+  0% {
+    right: -100vw;
+  }
+  20% {
+    right: -60vw;
+  }
+  40% {
+    right: -20vw;
+  }
+  60% {
+    right: 0vw;
+  }
+  80% {
+    right: 15vw;
+  }
+  100% {
+    right: -10vw;
+  }
 }

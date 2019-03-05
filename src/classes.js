@@ -27,7 +27,10 @@ const globalConst = {
   demonPoints: 1,
   // cat properties
   catHealth: 5,
-  invincibilityTime: 3000 //milliseconds
+  invincibilityTime: 3000, //milliseconds
+  // other properties
+  animationName: "glow 1s ease-in-out infinite alternate",
+  shootKey: 17
 };
 
 class Item {

@@ -105,7 +105,10 @@ function gameOver() {
     ctx.drawImage(
       tryAgainImg,
       canvas.width / 2 - globalConst.tryImgWidth / 2,
-      canvas.height / 2 - globalConst.tryImgHeight + globalConst.goImgHeight + 10,
+      canvas.height / 2 -
+        globalConst.tryImgHeight +
+        globalConst.goImgHeight +
+        10,
       globalConst.tryImgWidth,
       globalConst.tryImgHeight
     );
@@ -177,23 +180,32 @@ function update() {
 }
 
 window.onload = function() {
-  for (let index = 0; index < cat.health; index++) {
-    fishBar.push(
-      new Fish(
-        globalConst.fishWidth,
-        globalConst.fishHeight,
-        "./images/fish.png"
-      )
-    );
-  }
+  document.getElementById("startBtn").addEventListener("click", event => {
+    // hide instructions and start game
+    document.getElementsByTagName("section")[1].style.display = "none";
+    // show canvas
+    document.getElementsByClassName("game-cont")[0].style.display = "flex";
+    // prepare objects for canvas
+    for (let index = 0; index < cat.health; index++) {
+      fishBar.push(
+        new Fish(
+          globalConst.fishWidth,
+          globalConst.fishHeight,
+          "./images/fish.png"
+        )
+      );
+    }
+    start();
+  });
+
   // add event listener to keys
   document.addEventListener("keydown", event => {
     cat.direction = keylogger.keyPress(event.keyCode);
     // orientation is used to give a direction to the hairballs
     if (cat.direction) cat.orientation = cat.direction;
     // space bar doesn't work when arrow up and arrow left are being pressed? odd...
-    // used ctrl key instead
-    if (event.keyCode === 17) {
+    // used other key instead
+    if (event.keyCode === globalConst.shootKey) {
       let hairball = new HairBall(
         globalConst.hairballWidth,
         globalConst.hairballHeight,
@@ -213,6 +225,4 @@ window.onload = function() {
     cat.direction = keylogger.keyRelease(event.keyCode);
     if (cat.direction) cat.orientation = cat.direction;
   });
-
-  start();
 };
