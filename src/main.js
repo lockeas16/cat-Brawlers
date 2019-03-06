@@ -11,6 +11,7 @@ let enemies = [];
 let hairballs = [];
 let fishBar = [];
 let score = 0;
+let waveTime = 0;
 
 // retrieve chosen cat from local storage
 let catChosen = window.localStorage.getItem("catChosen");
@@ -33,15 +34,17 @@ let fondo = new Background(
 let keylogger = new keyLogger();
 
 function generateEnemies() {
-  if (!(frames % 60 === 0)) return;
-  let enemy = new Enemy(
-    globalConst.demonSpriteWidth / globalConst.cols,
-    globalConst.demonSpriteHeight,
-    `./images/demon-white-sprite.png`,
-    globalConst.demonPoints
-  );
-  enemy.chooseSpawnPoint(canvas.width, canvas.height);
-  enemies.push(enemy);
+  // if (!(frames % 60 === 0)) return;
+  if (frames % 30 === 0) {
+    let enemy = new Enemy(
+      globalConst.demonSpriteWidth / globalConst.cols,
+      globalConst.demonSpriteHeight,
+      `./images/demon-white-sprite.png`,
+      globalConst.demonPoints
+    );
+    enemy.chooseSpawnPoint(canvas.width, canvas.height);
+    enemies.push(enemy);
+  }
 }
 
 function drawEnemies() {
@@ -158,6 +161,7 @@ function restart() {
 
 function update() {
   frames++;
+  waveTime = frames / 60;
   // canvas world
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   fondo.draw(ctx);
@@ -167,7 +171,10 @@ function update() {
   if (cat.direction)
     cat.move(globalConst.movement, 0, canvas.width, canvas.height, 0);
   detectCollitions(hairballs, enemies);
-  generateEnemies();
+  // generate enemies during a period of time
+  if (waveTime < globalConst.waveTime) {
+    generateEnemies();
+  }
   drawHairballs();
   drawEnemies();
 
@@ -210,7 +217,7 @@ window.onload = function() {
     audio.src = "./sounds/Cyborg Ninja.mp3";
     audio.loop = true;
     audio.volume = 0.6;
-    // audio.play();
+    audio.play();
     start();
   });
 

@@ -25,6 +25,7 @@ const globalConst = {
   bulletSpeed: 4,
   // enemies properties
   demonPoints: 1,
+  waveTime: 10, //seconds
   // cat properties
   catHealth: 5,
   invincibilityTime: 3000, //milliseconds

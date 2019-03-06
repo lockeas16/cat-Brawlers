@@ -192,7 +192,7 @@ section.instr section.grid > h1 {
 section.instr section.grid article.box p {
   font-family: "Gloria Hallelujah", cursive;
   font-size: 1.2em;
-  color: white;
+  color: rgb(73, 131, 197);
   text-align: center;
 }
 
@@ -202,9 +202,10 @@ section.grid article.box {
   align-items: center;
   flex-direction: row;
   position: relative;
-  background-color: rgb(73, 131, 197);
+  background-color: white;
   margin-bottom: 1vw;
   border-radius: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 section.grid article.box img {
@@ -224,6 +225,8 @@ section.grid article.box span {
 }
 
 .appear-left {
+  -webkit-animation: appearFromLeft 2s 1 ease-out;
+  -moz-animation: appearFromLeft 2s 1 ease-out;
   animation: appearFromLeft 2s 1 ease-out;
 }
 
@@ -233,10 +236,12 @@ section.grid article.box span {
 }
 
 .appear-right {
+  -webkit-animation: appearFromRight 2s 1 ease-out;
+  -moz-animation: appearFromRight 2s 1 ease-out;
   animation: appearFromRight 2s 1 ease-out;
 }
 
-.btn{
+.btn {
   font-family: "Gloria Hallelujah", cursive;
   padding: 1em;
   color: black;
@@ -251,7 +256,7 @@ section.grid article.box span {
   animation: bounce 3s infinite linear;
 }
 
-section.instr button{
+section.instr button {
   font-size: 1.5em;
 }
 section.instr button:hover {
@@ -282,7 +287,6 @@ section.game-cont {
   justify-content: center;
   align-items: center;
 }
-
 
 /* animations */
 @keyframes bounce {
