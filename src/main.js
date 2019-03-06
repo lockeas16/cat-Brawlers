@@ -199,10 +199,6 @@ function update() {
 
 window.onload = function() {
   document.getElementById("startBtn").addEventListener("click", event => {
-    // hide instructions and start game
-    document.getElementsByTagName("section")[1].style.display = "none";
-    // show canvas
-    document.getElementsByClassName("game-cont")[0].style.display = "flex";
     // prepare objects for canvas
     for (let index = 0; index < cat.health; index++) {
       fishBar.push(
@@ -217,7 +213,9 @@ window.onload = function() {
     audio.src = "./sounds/Cyborg Ninja.mp3";
     audio.loop = true;
     audio.volume = 0.6;
-    audio.play();
+    // audio.play();
+    // disable button to avoid restart of the game
+    document.getElementById("startBtn").disabled = true;
     start();
   });
 

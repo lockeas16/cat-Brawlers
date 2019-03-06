@@ -27,8 +27,8 @@ const globalConst = {
   demonPoints: 1,
   waveTime: 10, //seconds
   // cat properties
-  catHealth: 5,
-  invincibilityTime: 3000, //milliseconds
+  catHealth: 3,
+  invincibilityTime: 1500, //milliseconds
   // other properties
   animationName: "glow 1s ease-in-out infinite alternate",
   shootKey: 17
