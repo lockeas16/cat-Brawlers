@@ -8,10 +8,22 @@ let ctxHud = hudCanvas.getContext("2d");
 let frames = 0;
 let interval = undefined;
 let enemies = [];
+let boss;
 let hairballs = [];
 let fishBar = [];
 let score = 0;
 let waveTime = 0;
+let bossTime = false;
+let playAlarm = true;
+
+let gameTrack = new Audio();
+gameTrack.src = "./sounds/MegaMan2CatLoop.mp3";
+gameTrack.loop = true;
+gameTrack.volume = 0.6;
+
+let bossTrack = new Audio();
+bossTrack.src = "./sounds/Undertale - AsgoreCat.mp3";
+bossTrack.loop = true;
 
 // retrieve chosen cat from local storage
 let catChosen = window.localStorage.getItem("catChosen");
@@ -40,16 +52,29 @@ function generateEnemies() {
       globalConst.demonSpriteWidth / globalConst.cols,
       globalConst.demonSpriteHeight,
       `./images/demon-white-sprite.png`,
-      globalConst.demonPoints
+      globalConst.demonPoints,
+      globalConst.enemyHealth
     );
     enemy.chooseSpawnPoint(canvas.width, canvas.height);
+    let enemyP = new Enemy(
+      globalConst.pickleSpriteWidth / globalConst.cols,
+      globalConst.pickleSpriteHeight,
+      `./images/pickleSpriteSmall.png`,
+      globalConst.picklePoints,
+      globalConst.enemyHealth
+    );
+    enemyP.chooseSpawnPoint(canvas.width, canvas.height);
     enemies.push(enemy);
+    enemies.push(enemyP);
   }
 }
 
 function drawEnemies() {
   enemies.forEach(enemy => {
     if (cat.isTouching(enemy) && !cat.invincible) {
+      let hurtSound = new Audio();
+      hurtSound.src = "./sounds/short-sharp-meow.wav";
+      hurtSound.play();
       cat.health--;
       cat.toggleDamage();
       fishBar.shift();
@@ -66,6 +91,29 @@ function drawEnemies() {
     enemy.draw(ctx);
     enemy.move(globalConst.enemySpeed, 0, canvas.width, canvas.height, 0, cat);
   });
+}
+
+function drawBoss() {
+  if (cat.isTouching(boss) && !cat.invincible) {
+    let hurtSound = new Audio();
+    hurtSound.src = "./sounds/short-sharp-meow.wav";
+    hurtSound.play();
+    cat.health--;
+    cat.toggleDamage();
+    fishBar.shift();
+    if (cat.health > 0) {
+      cat.toggleInvincibility();
+      // fire a timeout to shift invincibility
+      setTimeout(() => {
+        cat.toggleInvincibility();
+        cat.toggleDamage();
+      }, globalConst.invincibilityTime);
+    }
+  }
+
+  boss.updateFrame(frames);
+  boss.draw(ctx);
+  boss.move(globalConst.enemySpeed, 0, canvas.width, canvas.height, 0, cat);
 }
 
 function drawHairballs() {
@@ -87,6 +135,7 @@ function detectCollitions(bullets, enemies) {
   enemies.forEach((enemy, indexEnemy) => {
     bullets.forEach((bullet, indexBullet) => {
       if (bullet.isTouching(enemy)) {
+        enemy.receiveDamage(bullet.damage);
         score += enemy.points;
         bullets.splice(indexBullet, 1);
         enemies.splice(indexEnemy, 1);
@@ -131,18 +180,27 @@ function start() {
 
 function restart() {
   if (interval !== undefined) return;
+  bossTrack.pause();
+  bossTrack.currentTime = 0;
+  gameTrack.pause();
+  gameTrack.currentTime = 0;
   frames = 0;
   enemies = [];
+  boss = {};
   hairballs = [];
   fishBar = [];
   score = 0;
   interval = undefined;
+  bossTime = false;
+  playAlarm = true;
+  keylogger = new keyLogger();
   cat = new Cat(
     globalConst.idleSpriteWidth / globalConst.cols,
     globalConst.idleSpriteHeight,
     `./images/${catChosen}-idle-spriteBig.png`,
     globalConst.catHealth
   );
+  gameTrack.play();
   // center cat in canvas
   // divide by 2 total width and total height of cat
   cat.x = canvas.width / 2 - cat.width / 2;
@@ -174,10 +232,34 @@ function update() {
   // generate enemies during a period of time
   if (waveTime < globalConst.waveTime) {
     generateEnemies();
+  } else if (waveTime > globalConst.waveTime && enemies.length === 0) {
+    gameTrack.pause();
+    bossTime = true;
   }
   drawHairballs();
-  drawEnemies();
+  if (enemies.length > 0) {
+    drawEnemies();
+  }
+  if (bossTime) {
+    if (playAlarm) {
+      let alarmSound = new Audio();
+      alarmSound.src = "./sounds/alarmSound.wav";
+      alarmSound.loop = false;
+      alarmSound.play();
+      playAlarm = false;
 
+      bossTrack.play();
+      boss = new Enemy(
+        globalConst.vacuumSpriteWidth / globalConst.cols,
+        globalConst.vacuumSpriteHeight,
+        `./images/vacuumSprite2.png`,
+        globalConst.bossPoints,
+        globalConst.bossHealth
+      );
+      boss.chooseSpawnPoint(canvas.width, canvas.height);
+    }
+    drawBoss();
+  }
   // hud canvas
   ctxHud.clearRect(0, 0, hudCanvas.width, hudCanvas.height);
   fishBar.forEach((fish, index) => {
@@ -209,11 +291,7 @@ window.onload = function() {
         )
       );
     }
-    let audio = new Audio();
-    audio.src = "./sounds/Cyborg Ninja.mp3";
-    audio.loop = true;
-    audio.volume = 0.6;
-    // audio.play();
+    gameTrack.play();
     // disable button to avoid restart of the game
     document.getElementById("startBtn").disabled = true;
     start();
@@ -238,7 +316,8 @@ window.onload = function() {
         globalConst.hairballWidth,
         globalConst.hairballHeight,
         "./images/Hairball2.png",
-        cat.orientation
+        cat.orientation,
+        globalConst.bulletDamage
       );
       hairball.alignCenter(cat);
       hairballs.push(hairball);

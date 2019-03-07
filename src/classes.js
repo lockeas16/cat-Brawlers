@@ -10,6 +10,10 @@ const globalConst = {
   upSpriteHeight: 72,
   demonSpriteWidth: 132,
   demonSpriteHeight: 46,
+  pickleSpriteWidth: 79,
+  pickleSpriteHeight: 52,
+  vacuumSpriteWidth: 1050,
+  vacuumSpriteHeight: 450,
   hairballWidth: 16,
   hairballHeight: 16,
   fishWidth: 64,
@@ -22,10 +26,16 @@ const globalConst = {
   // speed and movement properties
   movement: 3,
   enemySpeed: 1,
+  pickleSpeed: 1.5,
   bulletSpeed: 4,
+  bulletDamage: 1,
   // enemies properties
   demonPoints: 1,
+  bossPoints: 100,
+  picklePoints: 2,
   waveTime: 10, //seconds
+  enemyHealth: 1,
+  bossHealth: 15,
   // cat properties
   catHealth: 3,
   invincibilityTime: 1500, //milliseconds
@@ -196,13 +206,14 @@ class Cat extends Item {
 }
 
 class Enemy extends Item {
-  constructor(width, height, src, points) {
+  constructor(width, height, src, points, health) {
     super(0, 0, width, height);
     this.srcx = 0;
     this.srcy = 0;
     this.image = new Image();
     this.image.src = src;
     this.points = points;
+    this.health = health;
   }
   draw(ctx) {
     ctx.drawImage(
@@ -276,16 +287,20 @@ class Enemy extends Item {
         break;
     }
   }
+  receiveDamage(damage){
+    return this.health -= damage;
+  }
 }
 
 class HairBall extends Item {
-  constructor(width, height, src, direction) {
+  constructor(width, height, src, direction, damage) {
     super(0, 0, width, height);
     this.srcx = 0;
     this.srcy = 0;
     this.image = new Image();
     this.image.src = src;
     this.direction = direction;
+    this.damage = damage;
   }
   draw(ctx) {
     ctx.drawImage(

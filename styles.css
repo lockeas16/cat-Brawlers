@@ -170,21 +170,21 @@ footer.foot {
 /*-------------------------------------------*/
 /* styles for game page */
 /*-------------------------------------------*/
+
 div.two-col{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: url("./images/blackcatBack.png");
-  height: 100vh;
 }
 
 section.instr {
+  background: url("./images/blackcatBack.png");
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 50vw;
 }
 
 section.instr section.grid > h1 {
@@ -293,7 +293,6 @@ section.game-cont {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 50vw;
 }
 
 /* animations */

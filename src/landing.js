@@ -26,7 +26,7 @@ window.onload = function() {
   start();
   document.getElementById("pawStart").addEventListener("click",()=>{
     let audio = new Audio();
-    audio.src = "./sounds/Le Grand Chase.mp3";
+    audio.src = "./sounds/CatIntro.mp3";
     audio.loop = true;
     audio.play();
     // hide landing section
