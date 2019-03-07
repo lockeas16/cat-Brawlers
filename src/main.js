@@ -176,6 +176,36 @@ function gameOver() {
   interval = undefined;
 }
 
+function winGame() {
+  let winImg = new Image();
+  winImg.src = "./images/youWin.png";
+  winImg.onload = () => {
+    ctx.drawImage(
+      winImg,
+      canvas.width / 2 - globalConst.winImgWidth,
+      canvas.height / 2 - globalConst.winImgHeight,
+      globalConst.winImgWidth * 2,
+      globalConst.winImgHeight * 2
+    );
+  };
+  let tryAgainImg = new Image();
+  tryAgainImg.src = "./images/tryAgain.png";
+  tryAgainImg.onload = () => {
+    ctx.drawImage(
+      tryAgainImg,
+      canvas.width / 2 - globalConst.tryImgWidth / 2,
+      canvas.height / 2 -
+        globalConst.tryImgHeight +
+        globalConst.winImgHeight +
+        30,
+      globalConst.tryImgWidth,
+      globalConst.tryImgHeight
+    );
+  };
+  clearInterval(interval);
+  interval = undefined;
+}
+
 function start() {
   interval = setInterval(update, 1000 / 60);
 }
@@ -261,6 +291,10 @@ function update() {
       boss.chooseSpawnPoint(canvas.width, canvas.height);
     }
     drawBoss();
+    detectCollitions(hairballs, [boss]);
+    if (boss.health <= 0){
+      winGame();
+    }
   }
   // hud canvas
   ctxHud.clearRect(0, 0, hudCanvas.width, hudCanvas.height);

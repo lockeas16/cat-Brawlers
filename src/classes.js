@@ -20,6 +20,8 @@ const globalConst = {
   fishHeight: 46,
   goImgWidth: 179,
   goImgHeight: 127,
+  winImgWidth: 179,
+  winImgHeight: 127,
   tryImgWidth: 330,
   tryImgHeight: 28,
   cols: 3,
