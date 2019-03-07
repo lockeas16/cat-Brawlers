@@ -135,10 +135,12 @@ function detectCollitions(bullets, enemies) {
   enemies.forEach((enemy, indexEnemy) => {
     bullets.forEach((bullet, indexBullet) => {
       if (bullet.isTouching(enemy)) {
-        enemy.receiveDamage(bullet.damage);
-        score += enemy.points;
+        let enemyHealth = enemy.receiveDamage(bullet.damage);
         bullets.splice(indexBullet, 1);
-        enemies.splice(indexEnemy, 1);
+        if (enemyHealth <= 0) {
+          score += enemy.points;
+          enemies.splice(indexEnemy, 1);
+        }
       }
     });
   });
