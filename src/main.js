@@ -27,16 +27,7 @@ bossTrack.loop = true;
 
 // retrieve chosen cat from local storage
 let catChosen = window.localStorage.getItem("catChosen");
-let cat = new Cat(
-  globalConst.idleSpriteWidth / globalConst.cols,
-  globalConst.idleSpriteHeight,
-  `./images/${catChosen}-idle-spriteBig.png`,
-  globalConst.catHealth
-);
-// center cat in canvas
-// divide by 2 total width and total height of cat
-cat.x = canvas.width / 2 - cat.width / 2;
-cat.y = canvas.height / 2 - cat.height / 2;
+let cat = createCat(catChosen);
 
 let fondo = new Background(
   canvas.width,
@@ -44,6 +35,39 @@ let fondo = new Background(
   "./images/gameBackground.png"
 );
 let keylogger = new keyLogger();
+
+function turnOffInvincibility(cat) {
+  setTimeout(() => {
+    cat.toggleInvincibility();
+    cat.toggleDamage();
+  }, globalConst.invincibilityTime);
+}
+
+function fillHealthBar(cat, fishArray){
+  for (let index = 0; index < cat.health; index++) {
+    fishArray.push(
+      new Fish(
+        globalConst.fishWidth,
+        globalConst.fishHeight,
+        "./images/fish.png"
+      )
+    );
+  }
+}
+
+function createCat(catChoice){
+  let newCat = new Cat(
+    globalConst.idleSpriteWidth / globalConst.cols,
+    globalConst.idleSpriteHeight,
+    `./images/${catChoice}-idle-spriteBig.png`,
+    globalConst.catHealth
+  );
+  // center cat in canvas
+  // divide by 2 total width and total height of cat
+  newCat.x = canvas.width / 2 - newCat.width / 2;
+  newCat.y = canvas.height / 2 - newCat.height / 2;
+  return newCat;
+}
 
 function generateEnemies() {
   // if (!(frames % 60 === 0)) return;
@@ -81,10 +105,7 @@ function drawEnemies() {
       if (cat.health > 0) {
         cat.toggleInvincibility();
         // fire a timeout to shift invincibility
-        setTimeout(() => {
-          cat.toggleInvincibility();
-          cat.toggleDamage();
-        }, globalConst.invincibilityTime);
+        turnOffInvincibility(cat);
       }
     }
     enemy.updateFrame(frames);
@@ -104,10 +125,7 @@ function drawBoss() {
     if (cat.health > 0) {
       cat.toggleInvincibility();
       // fire a timeout to shift invincibility
-      setTimeout(() => {
-        cat.toggleInvincibility();
-        cat.toggleDamage();
-      }, globalConst.invincibilityTime);
+      turnOffInvincibility(cat);
     }
   }
 
@@ -118,14 +136,14 @@ function drawBoss() {
 
 function drawHairballs() {
   hairballs.forEach((hairball, index) => {
+    // if hairball is out of canvas, delete it from the array
     if (
       hairball.x > canvas.width ||
       hairball.x < 0 ||
       hairball.y > canvas.height ||
       hairball.y < 0
-    ) {
+    )
       return hairballs.splice(index, 1);
-    }
     hairball.draw(ctx);
     hairball.move(globalConst.bulletSpeed);
   });
@@ -226,26 +244,9 @@ function restart() {
   bossTime = false;
   playAlarm = true;
   keylogger = new keyLogger();
-  cat = new Cat(
-    globalConst.idleSpriteWidth / globalConst.cols,
-    globalConst.idleSpriteHeight,
-    `./images/${catChosen}-idle-spriteBig.png`,
-    globalConst.catHealth
-  );
   gameTrack.play();
-  // center cat in canvas
-  // divide by 2 total width and total height of cat
-  cat.x = canvas.width / 2 - cat.width / 2;
-  cat.y = canvas.height / 2 - cat.height / 2;
-  for (let index = 0; index < cat.health; index++) {
-    fishBar.push(
-      new Fish(
-        globalConst.fishWidth,
-        globalConst.fishHeight,
-        "./images/fish.png"
-      )
-    );
-  }
+  cat = createCat(catChosen);
+  fillHealthBar(cat, fishBar)
   start();
 }
 
@@ -291,18 +292,20 @@ function update() {
       boss.chooseSpawnPoint(canvas.width, canvas.height);
     }
     drawBoss();
+    // to reuse function of collisions, we pass the boss 
+    //object as a one item array
     detectCollitions(hairballs, [boss]);
-    if (boss.health <= 0){
-      winGame();
-    }
+    if (boss.health <= 0) winGame();
   }
   // hud canvas
   ctxHud.clearRect(0, 0, hudCanvas.width, hudCanvas.height);
   fishBar.forEach((fish, index) => {
+    // position fish in canvas
     fish.x = index * fish.width + 15;
     fish.y = hudCanvas.height / 2;
     fish.draw(ctxHud);
   });
+  // draw the total score
   ctxHud.font = "25px Chicle";
   // gradient for text
   let gradient = ctxHud.createLinearGradient(580, 0, hudCanvas.width, 0);
@@ -318,15 +321,7 @@ function update() {
 window.onload = function() {
   document.getElementById("startBtn").addEventListener("click", event => {
     // prepare objects for canvas
-    for (let index = 0; index < cat.health; index++) {
-      fishBar.push(
-        new Fish(
-          globalConst.fishWidth,
-          globalConst.fishHeight,
-          "./images/fish.png"
-        )
-      );
-    }
+    fillHealthBar(cat,fishBar)
     gameTrack.play();
     // disable button to avoid restart of the game
     document.getElementById("startBtn").disabled = true;
