@@ -43,7 +43,7 @@ function turnOffInvincibility(cat) {
   }, globalConst.invincibilityTime);
 }
 
-function fillHealthBar(cat, fishArray){
+function fillHealthBar(cat, fishArray) {
   for (let index = 0; index < cat.health; index++) {
     fishArray.push(
       new Fish(
@@ -55,7 +55,7 @@ function fillHealthBar(cat, fishArray){
   }
 }
 
-function createCat(catChoice){
+function createCat(catChoice) {
   let newCat = new Cat(
     globalConst.idleSpriteWidth / globalConst.cols,
     globalConst.idleSpriteHeight,
@@ -77,7 +77,8 @@ function generateEnemies() {
       globalConst.demonSpriteHeight,
       `./images/demon-white-sprite.png`,
       globalConst.demonPoints,
-      globalConst.enemyHealth
+      globalConst.enemyHealth,
+      globalConst.enemySpeed
     );
     enemy.chooseSpawnPoint(canvas.width, canvas.height);
     let enemyP = new Enemy(
@@ -85,7 +86,8 @@ function generateEnemies() {
       globalConst.pickleSpriteHeight,
       `./images/pickleSpriteSmall.png`,
       globalConst.picklePoints,
-      globalConst.enemyHealth
+      globalConst.enemyHealth,
+      globalConst.pickleSpeed
     );
     enemyP.chooseSpawnPoint(canvas.width, canvas.height);
     enemies.push(enemy);
@@ -110,7 +112,7 @@ function drawEnemies() {
     }
     enemy.updateFrame(frames);
     enemy.draw(ctx);
-    enemy.move(globalConst.enemySpeed, 0, canvas.width, canvas.height, 0, cat);
+    enemy.move(0, canvas.width, canvas.height, 0, cat);
   });
 }
 
@@ -131,7 +133,15 @@ function drawBoss() {
 
   boss.updateFrame(frames);
   boss.draw(ctx);
-  boss.move(globalConst.enemySpeed, 0, canvas.width, canvas.height, 0, cat);
+  boss.move(0, canvas.width, canvas.height, 0, cat);
+  // draw boss health bar
+  ctx.fillStyle = "red";
+  ctx.fillRect(
+    boss.x,
+    boss.y - 40,
+    boss.width * (boss.health / globalConst.bossHealth),
+    30
+  );
 }
 
 function drawHairballs() {
@@ -246,7 +256,7 @@ function restart() {
   keylogger = new keyLogger();
   gameTrack.play();
   cat = createCat(catChosen);
-  fillHealthBar(cat, fishBar)
+  fillHealthBar(cat, fishBar);
   start();
 }
 
@@ -287,12 +297,13 @@ function update() {
         globalConst.vacuumSpriteHeight,
         `./images/vacuumSprite2.png`,
         globalConst.bossPoints,
-        globalConst.bossHealth
+        globalConst.bossHealth,
+        globalConst.bossSpeed
       );
       boss.chooseSpawnPoint(canvas.width, canvas.height);
     }
     drawBoss();
-    // to reuse function of collisions, we pass the boss 
+    // to reuse function of collisions, we pass the boss
     //object as a one item array
     detectCollitions(hairballs, [boss]);
     if (boss.health <= 0) winGame();
@@ -321,7 +332,7 @@ function update() {
 window.onload = function() {
   document.getElementById("startBtn").addEventListener("click", event => {
     // prepare objects for canvas
-    fillHealthBar(cat,fishBar)
+    fillHealthBar(cat, fishBar);
     gameTrack.play();
     // disable button to avoid restart of the game
     document.getElementById("startBtn").disabled = true;

@@ -26,24 +26,25 @@ const globalConst = {
   tryImgHeight: 28,
   cols: 3,
   // speed and movement properties
-  movement: 3,
+  movement: 4,
   enemySpeed: 1,
-  pickleSpeed: 1.5,
+  pickleSpeed: 1.8,
+  bossSpeed: 1.4,
   bulletSpeed: 4,
   bulletDamage: 1,
   // enemies properties
   demonPoints: 1,
   bossPoints: 100,
   picklePoints: 2,
-  waveTime: 10, //seconds
+  waveTime: 5, //seconds
   enemyHealth: 1,
-  bossHealth: 15,
+  bossHealth: 20,
   // cat properties
-  catHealth: 3,
+  catHealth: 5,
   invincibilityTime: 1500, //milliseconds
   // other properties
   animationName: "glow 1s ease-in-out infinite alternate",
-  shootKey: 17
+  shootKey: 83
 };
 
 class Item {
@@ -208,7 +209,7 @@ class Cat extends Item {
 }
 
 class Enemy extends Item {
-  constructor(width, height, src, points, health) {
+  constructor(width, height, src, points, health, speed) {
     super(0, 0, width, height);
     this.srcx = 0;
     this.srcy = 0;
@@ -216,6 +217,7 @@ class Enemy extends Item {
     this.image.src = src;
     this.points = points;
     this.health = health;
+    this.speed = speed;
   }
   draw(ctx) {
     ctx.drawImage(
@@ -241,29 +243,29 @@ class Enemy extends Item {
       this.srcx = 2 * this.width;
     }
   }
-  moveDown(mov, boundarie) {
-    if (this.y + mov + this.height < boundarie) this.y += mov;
+  moveDown(boundarie) {
+    if (this.y + this.speed + this.height < boundarie) this.y += this.speed;
   }
-  moveUp(mov, boundarie) {
-    if (this.y - mov > boundarie) this.y -= mov;
+  moveUp(boundarie) {
+    if (this.y - this.speed > boundarie) this.y -= this.speed;
   }
-  moveRight(mov, boundarie) {
-    if (this.x + mov + this.width < boundarie) this.x += mov;
+  moveRight(boundarie) {
+    if (this.x + this.speed + this.width < boundarie) this.x += this.speed;
   }
-  moveLeft(mov, boundarie) {
-    if (this.x - mov > boundarie) this.x -= mov;
+  moveLeft(boundarie) {
+    if (this.x - this.speed > boundarie) this.x -= this.speed;
   }
-  move(mov, boundTop, boundRight, boundBottom, boundLeft, target) {
+  move(boundTop, boundRight, boundBottom, boundLeft, target) {
     let { x, y, width, height } = target;
     let xTargetCenter = x + width / 2 - this.width / 2;
     let yTargetCenter = y + height / 2 - this.height / 2;
-    if (this.x < xTargetCenter) this.moveRight(mov, boundRight);
-    if (this.x > xTargetCenter) this.moveLeft(mov, boundLeft);
-    if (this.y < yTargetCenter) this.moveDown(mov, boundBottom);
-    if (this.y > yTargetCenter) this.moveUp(mov, boundTop);
+    if (this.x < xTargetCenter) this.moveRight(boundRight);
+    if (this.x > xTargetCenter) this.moveLeft(boundLeft);
+    if (this.y < yTargetCenter) this.moveDown(boundBottom);
+    if (this.y > yTargetCenter) this.moveUp(boundTop);
   }
-  chooseSpawnPoint(boundRight,boundBottom) {
-    switch (randomNum(4)) {
+  chooseSpawnPoint(boundRight, boundBottom) {
+    switch (randomNum(8)) {
       // top left point
       case 0:
         this.x = -this.width;
@@ -284,13 +286,33 @@ class Enemy extends Item {
         this.x = -this.width;
         this.y = boundBottom + this.height;
         break;
-  
+      // middle top
+      case 4:
+        this.x = boundBottom / 2 - this.width / 2;
+        this.y = -this.height;
+        break;
+      // middle right
+      case 5:
+        this.x = boundRight + this.width;
+        this.y = boundRight / 2 - this.height / 2;
+        break;
+      // middle bottom
+      case 6:
+        this.x = boundBottom / 2 - this.width / 2;
+        this.y = boundBottom + this.height;
+        break;
+      // middle right
+      case 7:
+        this.x = -this.width;
+        this.y = boundRight / 2 - this.height / 2;
+        break;
+
       default:
         break;
     }
   }
-  receiveDamage(damage){
-    return this.health -= damage;
+  receiveDamage(damage) {
+    return (this.health -= damage);
   }
 }
 
@@ -431,6 +453,6 @@ class keyLogger {
   }
 }
 
-function randomNum(max, min="0") {
+function randomNum(max, min = "0") {
   return Math.floor(Math.random() * (max - min) + min);
 }
